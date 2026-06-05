@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import useAuthStore from "../../store/authStore";
+import "./Auth.css";
 
 const LoginPage = () => {
   const navigate = useNavigate();
@@ -31,7 +32,7 @@ const LoginPage = () => {
       member: {
         email: form.email,
         nickname: "트렌디유저",
-        role: "ROLE_USER",
+        role: "ROLE_ADMIN",
       },
     });
 

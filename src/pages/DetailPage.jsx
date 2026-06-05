@@ -1,4 +1,5 @@
 import { useParams } from "react-router-dom";
+import "./DetailPage.css";
 
 const DetailPage = () => {
   const { spotId } = useParams();

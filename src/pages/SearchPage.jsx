@@ -1,5 +1,6 @@
 import { useState } from "react";
 import SpotCard from "../components/spot/SpotCard";
+import "./SearchPage.css";
 
 const dummySpots = [
   {

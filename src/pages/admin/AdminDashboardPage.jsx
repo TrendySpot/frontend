@@ -1,3 +1,5 @@
+import "./AdminDashboardPage.css";
+
 const AdminDashboardPage = () => {
   return (
     <div className="admin-page">

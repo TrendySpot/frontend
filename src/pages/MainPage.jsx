@@ -1,10 +1,13 @@
 import { useNavigate } from "react-router-dom";
 import SpotCard from "../components/spot/SpotCard";
+import "./MainPage.css";
+import { FaArrowRight } from "react-icons/fa";
 
 const dummySpots = [
   {
     id: 1,
     title: "성수 감성 팝업스토어",
+    spot_type: "팝업스토어",
     area: "서울특별시 성수동",
     startDate: "2026.06.10",
     endDate: "2026.07.01",
@@ -15,6 +18,7 @@ const dummySpots = [
   {
     id: 2,
     title: "빛의 전시회",
+    spot_type: "전시회",
     area: "서울특별시 강남구",
     startDate: "2026.06.15",
     endDate: "2026.08.20",
@@ -25,6 +29,7 @@ const dummySpots = [
   {
     id: 3,
     title: "여름 한정 브랜드 팝업",
+    spot_type: "팝업스토어",
     area: "부산광역시 해운대구",
     startDate: "2026.06.20",
     endDate: "2026.07.10",
@@ -76,7 +81,12 @@ const MainPage = () => {
       <section className="spot-section">
         <div className="section-title">
           <h2>지금 인기 있는 스팟</h2>
-          <button onClick={() => navigate("/search")}>전체보기</button>
+          <button
+            className="view-all-btn"
+            onClick={() => navigate("/search")}
+          >
+            전체보기 <FaArrowRight />
+          </button>
         </div>
 
         <div className="spot-grid">
