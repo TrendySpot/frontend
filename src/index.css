@@ -25,6 +25,7 @@ button {
   cursor: pointer;
 }
 
+/* ── 헤더 ── */
 .header {
   height: 72px;
   padding: 0 48px;
@@ -39,23 +40,34 @@ button {
 }
 
 .logo {
-  font-size: 24px;
+  font-size: 22px;
   font-weight: 900;
   color: #6a5cff;
+  letter-spacing: -0.5px;
 }
 
 .nav {
   display: flex;
   align-items: center;
-  gap: 20px;
+  gap: 24px;
 }
 
+.nav a,
 .nav button {
   border: 0;
   background: transparent;
   font-size: 15px;
+  font-weight: 500;
+  color: #1e1e2f;
+  transition: color 0.15s;
 }
 
+.nav a:hover,
+.nav button:hover {
+  color: #6a5cff;
+}
+
+/* ── 히어로 ── */
 .hero-section {
   margin: 32px auto;
   max-width: 1180px;
@@ -65,53 +77,99 @@ button {
   color: white;
   background: linear-gradient(135deg, #6a5cff, #8b5cf6, #ff5ea8);
   position: relative;
+  overflow: hidden;
+}
+
+.hero-section::before {
+  content: "";
+  position: absolute;
+  top: -80px;
+  right: -80px;
+  width: 300px;
+  height: 300px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.07);
+}
+
+.hero-section::after {
+  content: "";
+  position: absolute;
+  bottom: -60px;
+  left: 200px;
+  width: 200px;
+  height: 200px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.05);
 }
 
 .hero-label {
   font-weight: 700;
   opacity: 0.85;
+  font-size: 14px;
+  letter-spacing: 0.05em;
+  margin-bottom: 8px;
 }
 
 .hero-text h1 {
-  font-size: 56px;
+  font-size: 48px;
+  font-weight: 900;
   line-height: 1.15;
-  margin: 12px 0;
+  margin: 0 0 16px;
+}
+
+.hero-text p {
+  font-size: 16px;
+  opacity: 0.8;
+  margin-bottom: 36px;
 }
 
 .search-panel {
   margin-top: 36px;
-  padding: 18px;
+  padding: 16px;
+  max-width: 600px;
   background: rgba(255, 255, 255, 0.22);
   border-radius: 28px;
   display: flex;
-  gap: 12px;
+  gap: 10px;
   backdrop-filter: blur(12px);
+  flex-wrap: wrap;
+  position: relative;
+  z-index: 1;
 }
 
 .search-panel input,
 .search-panel select {
   flex: 1;
+  min-width: 140px;
   border: 0;
   border-radius: 18px;
-  padding: 16px;
+  padding: 14px 18px;
+  font-size: 14px;
+  outline: none;
 }
 
-.search-panel button,
-.auth-card button,
-.reservation-form button {
+.search-panel button {
   border: 0;
   border-radius: 18px;
-  padding: 16px 24px;
+  padding: 14px 28px;
   color: white;
   font-weight: 800;
+  font-size: 14px;
   background: linear-gradient(135deg, #ff5ea8, #8b5cf6);
+  white-space: nowrap;
+  transition: opacity 0.2s;
 }
 
+.search-panel button:hover {
+  opacity: 0.9;
+}
+
+/* ── 카테고리 칩 ── */
 .category-section {
   max-width: 1180px;
-  margin: 0 auto 40px;
+  margin: 0 auto 32px;
   display: flex;
-  gap: 12px;
+  gap: 10px;
   flex-wrap: wrap;
 }
 
@@ -121,8 +179,23 @@ button {
   border-radius: 999px;
   background: white;
   box-shadow: 0 8px 18px rgba(0, 0, 0, 0.05);
+  font-size: 14px;
+  font-weight: 500;
+  transition: 0.2s;
+  white-space: nowrap;
 }
 
+.category-chip:hover {
+  background: #f1f0ff;
+  color: #6a5cff;
+}
+
+.category-chip.active {
+  background: #1e1e2f;
+  color: white;
+}
+
+/* ── 스팟 섹션 ── */
 .spot-section,
 .search-result {
   max-width: 1180px;
@@ -134,84 +207,149 @@ button {
   display: flex;
   align-items: center;
   justify-content: space-between;
+  margin-bottom: 24px;
 }
 
+.section-title h2,
+.result-header h1 {
+  font-size: 22px;
+  font-weight: 900;
+  color: #1e1e2f;
+  margin: 0;
+}
+
+.section-title button,
+.result-header select {
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
+  padding: 10px 14px;
+  font-size: 13px;
+  background: white;
+  color: #6b7280;
+  font-weight: 600;
+  outline: none;
+}
+
+/* ── 스팟 그리드 ── */
 .spot-grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   gap: 28px;
 }
 
+@media (max-width: 900px) {
+  .spot-grid { grid-template-columns: repeat(2, 1fr); }
+}
+@media (max-width: 580px) {
+  .spot-grid { grid-template-columns: 1fr; }
+}
+
+/* ── 스팟 카드 ── */
 .spot-card {
   background: white;
   border-radius: 28px;
   overflow: hidden;
   box-shadow: 0 18px 38px rgba(29, 29, 47, 0.08);
   transition: 0.25s;
+  display: block;
+  color: inherit;
 }
 
 .spot-card:hover {
   transform: translateY(-8px);
+  box-shadow: 0 28px 48px rgba(29, 29, 47, 0.14);
 }
 
 .spot-img-wrap {
   height: 220px;
   position: relative;
+  overflow: hidden;
+  background: #f1f2f6;
 }
 
 .spot-img-wrap img {
   width: 100%;
   height: 100%;
   object-fit: cover;
+  transition: transform 0.4s ease;
+}
+
+.spot-card:hover .spot-img-wrap img {
+  transform: scale(1.05);
 }
 
 .wish-btn {
   position: absolute;
-  top: 16px;
-  right: 16px;
+  top: 14px;
+  right: 14px;
   border: 0;
-  width: 42px;
-  height: 42px;
+  width: 40px;
+  height: 40px;
   border-radius: 50%;
   background: white;
-  color: #ff5ea8;
-  font-size: 20px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.2s;
+  z-index: 2;
+}
+
+.wish-btn:hover {
+  transform: scale(1.15);
 }
 
 .status-badge {
   display: inline-block;
-  padding: 8px 14px;
+  padding: 6px 14px;
   border-radius: 999px;
   background: #111827;
   color: white;
-  font-size: 13px;
+  font-size: 12px;
   font-weight: 700;
-}
-
-.spot-img-wrap .status-badge {
   position: absolute;
-  left: 16px;
-  bottom: 16px;
+  left: 14px;
+  bottom: 14px;
 }
 
 .spot-info {
-  padding: 22px;
+  padding: 20px 22px 22px;
 }
 
+.spot-info h3 {
+  font-size: 15px;
+  font-weight: 700;
+  color: #1e1e2f;
+  margin: 6px 0;
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+}
+
+.spot-info p {
+  margin: 0;
+  font-size: 12px;
+  color: #6b7280;
+}
+
+/* ── 검색 페이지 ── */
 .search-page {
   max-width: 1280px;
   margin: 40px auto;
+  padding: 0 24px;
   display: grid;
   grid-template-columns: 260px 1fr;
   gap: 32px;
 }
 
+/* ── 패널 (흰 카드) ── */
 .filter-sidebar,
 .auth-card,
 .reservation-panel,
 .profile-card,
 .mypage-box,
-.admin-box {
+.panel {
   background: white;
   border-radius: 28px;
   padding: 28px;
@@ -226,22 +364,40 @@ button {
   display: block;
   margin-bottom: 12px;
   font-weight: 800;
+  font-size: 13px;
+}
+
+.filter-group select {
+  width: 100%;
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
+  padding: 10px 14px;
+  font-size: 13px;
+  outline: none;
 }
 
 .filter-group button {
-  margin: 4px;
+  margin: 0 4px 4px 0;
   border: 0;
-  padding: 10px 14px;
+  padding: 10px 16px;
   border-radius: 999px;
   background: #f1f2f6;
+  font-size: 13px;
+  font-weight: 600;
+  transition: 0.15s;
 }
 
-.filter-group button.active,
-.pagination button.active {
-  background: #111827;
+.filter-group button:hover {
+  background: #f1f0ff;
+  color: #6a5cff;
+}
+
+.filter-group button.active {
+  background: #1e1e2f;
   color: white;
 }
 
+/* ── 페이지네이션 ── */
 .pagination {
   margin-top: 40px;
   display: flex;
@@ -251,14 +407,30 @@ button {
 
 .pagination button {
   border: 0;
-  padding: 12px 16px;
+  padding: 10px 16px;
   border-radius: 12px;
   background: white;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
+  font-weight: 500;
+  font-size: 14px;
+  transition: 0.15s;
 }
 
+.pagination button:hover {
+  background: #f1f0ff;
+  color: #6a5cff;
+}
+
+.pagination button.active {
+  background: #1e1e2f;
+  color: white;
+}
+
+/* ── 상세 페이지 ── */
 .detail-page {
   max-width: 1280px;
   margin: 40px auto;
+  padding: 0 24px;
   display: grid;
   grid-template-columns: 1fr 360px;
   gap: 32px;
@@ -268,19 +440,36 @@ button {
   width: 100%;
   height: 460px;
   object-fit: cover;
-  border-radius: 36px;
+  border-radius: 28px;
+}
+
+.detail-image-wrap {
+  position: relative;
 }
 
 .detail-info {
-  margin-top: 32px;
+  margin-top: 28px;
   background: white;
   border-radius: 28px;
   padding: 32px;
+  box-shadow: 0 18px 38px rgba(29, 29, 47, 0.08);
 }
 
-.map-box,
-.calendar-placeholder,
-.chart-placeholder {
+.detail-info h1 {
+  font-size: 28px;
+  font-weight: 900;
+  color: #1e1e2f;
+  margin: 12px 0 8px;
+}
+
+.detail-info h2 {
+  font-size: 18px;
+  font-weight: 800;
+  color: #1e1e2f;
+  margin: 28px 0 12px;
+}
+
+.map-box {
   height: 220px;
   border-radius: 24px;
   background: linear-gradient(135deg, #eef0ff, #ffe7f3);
@@ -288,6 +477,7 @@ button {
   align-items: center;
   justify-content: center;
   color: #6b7280;
+  overflow: hidden;
 }
 
 .reservation-panel {
@@ -296,6 +486,7 @@ button {
   height: fit-content;
 }
 
+/* ── 프로그레스바 ── */
 .progress-bar {
   height: 12px;
   background: #eee;
@@ -304,9 +495,11 @@ button {
   margin: 12px 0;
 }
 
-.progress-bar div {
+.progress-bar-fill {
   height: 100%;
   background: linear-gradient(135deg, #6a5cff, #ff5ea8);
+  border-radius: 999px;
+  transition: width 0.6s ease;
 }
 
 .reservation-form {
@@ -316,14 +509,111 @@ button {
 }
 
 .reservation-form input,
-.reservation-form select,
-.auth-card input,
-.auth-card textarea {
+.reservation-form select {
   border: 1px solid #e5e7eb;
   border-radius: 16px;
   padding: 14px;
+  font-size: 14px;
+  outline: none;
 }
 
+/* ── 공통 버튼 ── */
+.btn-primary {
+  border: 0;
+  border-radius: 999px;
+  padding: 14px 24px;
+  color: white;
+  font-weight: 800;
+  font-size: 14px;
+  background: linear-gradient(135deg, #ff5ea8, #8b5cf6);
+  transition: opacity 0.2s;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+.btn-primary:hover {
+  opacity: 0.9;
+}
+
+.btn-primary:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.btn-secondary {
+  border: 1px solid #e5e7eb;
+  border-radius: 999px;
+  padding: 14px 24px;
+  color: #1e1e2f;
+  font-weight: 700;
+  font-size: 14px;
+  background: white;
+  transition: background 0.15s;
+}
+
+.btn-secondary:hover {
+  background: #f7f8fc;
+}
+
+.btn-kakao {
+  border: 0;
+  border-radius: 16px;
+  padding: 16px;
+  color: #1e1e2f;
+  font-weight: 800;
+  font-size: 15px;
+  background: #fee500;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: opacity 0.2s;
+}
+
+.btn-kakao:hover {
+  opacity: 0.9;
+}
+
+/* ── 공통 인풋 ── */
+.input-field {
+  width: 100%;
+  border: 1px solid #e5e7eb;
+  border-radius: 16px;
+  padding: 14px 16px;
+  font-size: 14px;
+  outline: none;
+  transition: border 0.2s;
+  box-sizing: border-box;
+  font-family: inherit;
+}
+
+.input-field:focus {
+  border-color: #6a5cff;
+  box-shadow: 0 0 0 3px rgba(106, 92, 255, 0.1);
+}
+
+.input-field:disabled {
+  background: #f7f8fc;
+  opacity: 0.7;
+}
+
+.input-label {
+  display: block;
+  font-size: 13px;
+  font-weight: 700;
+  color: #1e1e2f;
+  margin-bottom: 6px;
+}
+
+.input-error {
+  font-size: 12px;
+  color: #ef4444;
+  font-weight: 500;
+  margin-top: 4px;
+}
+
+/* ── 인증 페이지 ── */
 .auth-page {
   min-height: 100vh;
   display: flex;
@@ -334,88 +624,80 @@ button {
 
 .auth-card {
   width: 420px;
+  background: white;
+  border-radius: 28px;
+  padding: 40px;
   display: flex;
   flex-direction: column;
   gap: 14px;
+  box-shadow: 0 32px 64px rgba(0, 0, 0, 0.15);
 }
 
-.kakao-btn {
-  background: #fee500 !important;
-  color: #111827 !important;
+.auth-card h1 {
+  font-size: 26px;
+  font-weight: 900;
+  color: #1e1e2f;
+  margin: 0;
 }
 
-.admin-page {
-  min-height: 100vh;
-  display: grid;
-  grid-template-columns: 260px 1fr;
+.auth-card p {
+  color: #6b7280;
+  font-size: 14px;
+  margin: 0;
 }
 
-.admin-sidebar {
-  padding: 32px;
-  background: #111827;
-  color: white;
-}
-
-.admin-sidebar nav {
+/* ── 모달 ── */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 50;
   display: flex;
-  flex-direction: column;
-  gap: 12px;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+  background: rgba(30, 30, 47, 0.5);
+  backdrop-filter: blur(4px);
 }
 
-.admin-sidebar button {
-  border: 0;
-  border-radius: 14px;
-  padding: 14px;
-  text-align: left;
-  color: white;
-  background: rgba(255, 255, 255, 0.08);
-}
-
-.admin-content {
-  padding: 40px;
-}
-
-.admin-stats,
-.mypage-stats {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 20px;
-}
-
-.stat-card,
-.mypage-stats div {
-  padding: 24px;
-  border-radius: 24px;
-  color: white;
-  background: linear-gradient(135deg, #6a5cff, #ff5ea8);
-}
-
-.admin-grid {
-  margin-top: 28px;
-  display: grid;
-  grid-template-columns: 1.5fr 1fr;
-  gap: 24px;
-}
-
-.admin-box {
-  margin-top: 28px;
-}
-
-table {
+.modal-box {
+  position: relative;
+  z-index: 10;
   width: 100%;
-  border-collapse: collapse;
+  background: white;
+  border-radius: 28px;
+  box-shadow: 0 32px 64px rgba(0, 0, 0, 0.2);
+  animation: fadeInUp 0.2s ease-out;
 }
 
-th,
-td {
-  padding: 14px;
-  border-bottom: 1px solid #eee;
-  text-align: left;
+.modal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 20px 28px;
+  border-bottom: 1px solid #f1f2f6;
 }
 
+.modal-header h2 {
+  font-size: 18px;
+  font-weight: 800;
+  color: #1e1e2f;
+  margin: 0;
+}
+
+.modal-body {
+  padding: 24px 28px;
+}
+
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(20px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* ── 마이페이지 ── */
 .mypage {
   max-width: 1180px;
   margin: 40px auto;
+  padding: 0 24px;
   display: grid;
   grid-template-columns: 240px 1fr;
   gap: 28px;
@@ -425,40 +707,128 @@ td {
   background: white;
   border-radius: 28px;
   padding: 24px;
+  box-shadow: 0 18px 38px rgba(29, 29, 47, 0.08);
   height: fit-content;
 }
 
 .mypage-sidebar button {
   width: 100%;
   border: 0;
-  padding: 14px;
-  margin-bottom: 8px;
+  padding: 12px 16px;
+  margin-bottom: 6px;
   border-radius: 14px;
-  background: #f1f2f6;
+  background: #f7f8fc;
   text-align: left;
+  font-size: 14px;
+  font-weight: 600;
+  color: #1e1e2f;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  transition: 0.15s;
+}
+
+.mypage-sidebar button:hover {
+  background: #f1f0ff;
+  color: #6a5cff;
+}
+
+.mypage-sidebar button.active {
+  background: linear-gradient(135deg, rgba(106,92,255,0.12), rgba(255,94,168,0.12));
+  color: #6a5cff;
 }
 
 .profile-card {
   display: flex;
   align-items: center;
-  gap: 20px;
+  gap: 16px;
+  background: white;
+  border-radius: 28px;
+  padding: 24px;
+  margin-bottom: 16px;
+  box-shadow: 0 18px 38px rgba(29, 29, 47, 0.08);
 }
 
 .profile-image {
-  width: 72px;
-  height: 72px;
+  width: 64px;
+  height: 64px;
   border-radius: 50%;
   background: linear-gradient(135deg, #ffd84d, #ff5ea8);
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 32px;
+  font-size: 24px;
+  color: white;
+  font-weight: 900;
+  flex-shrink: 0;
 }
 
+/* ── 배지 ── */
+.badge {
+  display: inline-block;
+  padding: 6px 14px;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.badge-ongoing  { background: #e8f5e9; color: #2e7d32; }
+.badge-deadline { background: #fff3e0; color: #e65100; }
+.badge-upcoming { background: #e3f2fd; color: #1565c0; }
+.badge-free     { background: #fce4ec; color: #c2185b; }
+.badge-ended    { background: #f1f2f6; color: #6b7280; }
+
+/* ── 리뷰 ── */
+.review-box {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.review-box textarea {
+  border: 1px solid #e5e7eb;
+  border-radius: 16px;
+  padding: 14px;
+  resize: none;
+  font-size: 14px;
+  font-family: inherit;
+  outline: none;
+}
+
+.review-box textarea:focus {
+  border-color: #6a5cff;
+}
+
+/* ── 404 ── */
 .not-found {
   min-height: 70vh;
   display: flex;
   align-items: center;
   justify-content: center;
   flex-direction: column;
+}
+
+/* ── 로딩 스피너 ── */
+.spinner {
+  width: 28px;
+  height: 28px;
+  border: 3px solid #e5e7eb;
+  border-top-color: #6a5cff;
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.5; }
+}
+
+.skeleton {
+  background: #f1f2f6;
+  border-radius: 8px;
+  animation: pulse 1.5s infinite;
 }

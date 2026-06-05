@@ -1,16 +1,11 @@
 import { Navigate } from "react-router-dom";
-import useAuthStore from "../../store/authStore";
+import { useAuth } from "../../context/AuthContext";
 
 const ProtectedRoute = ({ children, adminOnly = false }) => {
-  const { member, accessToken } = useAuthStore();
+  const { member, isLoggedIn } = useAuth();
 
-  if (!accessToken) {
-    return <Navigate to="/login" replace />;
-  }
-
-  if (adminOnly && member?.role !== "ROLE_ADMIN") {
-    return <Navigate to="/" replace />;
-  }
+  if (!isLoggedIn) return <Navigate to="/login" replace />;
+  if (adminOnly && member?.role !== "ROLE_ADMIN") return <Navigate to="/" replace />;
 
   return children;
 };

@@ -1,18 +1,15 @@
 import { Routes, Route } from "react-router-dom";
-
 import Layout from "../components/layout/Layout";
+import ProtectedRoute from "../components/common/ProtectedRoute";
 
 import MainPage from "../pages/MainPage";
 import SearchPage from "../pages/SearchPage";
 import DetailPage from "../pages/DetailPage";
 import MyPage from "../pages/MyPage";
-
 import LoginPage from "../pages/auth/LoginPage";
 import SignUpPage from "../pages/auth/SignUpPage";
-
 import AdminDashboardPage from "../pages/admin/AdminDashboardPage";
-
-import ProtectedRoute from "../components/common/ProtectedRoute";
+import NotFoundPage from "../pages/NotFoundPage";
 
 const Router = () => {
   return (
@@ -21,7 +18,6 @@ const Router = () => {
         <Route path="/" element={<MainPage />} />
         <Route path="/search" element={<SearchPage />} />
         <Route path="/spots/:spotId" element={<DetailPage />} />
-
         <Route
           path="/mypage"
           element={
@@ -43,6 +39,8 @@ const Router = () => {
           </ProtectedRoute>
         }
       />
+
+      <Route path="*" element={<NotFoundPage />} />
     </Routes>
   );
 };
