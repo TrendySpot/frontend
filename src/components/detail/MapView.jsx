@@ -1,35 +1,78 @@
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 
 const MapView = ({ latitude, longitude, address }) => {
-  const mapRef = useRef(null);
+  const mapRef  = useRef(null);
+  const [loaded, setLoaded] = useState(false);
+  const [error,  setError]  = useState(false);
 
   useEffect(() => {
     if (!latitude || !longitude) return;
-    const kakao = window.kakao;
-    if (!kakao?.maps) return;
-    kakao.maps.load(() => {
-      const map = new kakao.maps.Map(mapRef.current, {
-        center: new kakao.maps.LatLng(latitude, longitude),
+
+    // SDK 미로드 시 처리
+    if (!window.kakao || !window.kakao.maps) {
+      setError(true);
+      return;
+    }
+
+    window.kakao.maps.load(() => {
+      const container = mapRef.current;
+      if (!container) return;
+
+      const map = new window.kakao.maps.Map(container, {
+        center: new window.kakao.maps.LatLng(latitude, longitude),
         level: 4,
       });
-      const marker = new kakao.maps.Marker({ position: new kakao.maps.LatLng(latitude, longitude) });
+
+      const marker = new window.kakao.maps.Marker({
+        position: new window.kakao.maps.LatLng(latitude, longitude),
+      });
       marker.setMap(map);
+
       if (address) {
-        const info = new kakao.maps.InfoWindow({
-          content: `<div style="padding:8px 12px;font-size:13px;font-weight:600">${address}</div>`,
+        const infowindow = new window.kakao.maps.InfoWindow({
+          content: `<div style="padding:8px 12px;font-size:13px;font-weight:600;font-family:Pretendard,sans-serif">${address}</div>`,
         });
-        info.open(map, marker);
+        infowindow.open(map, marker);
       }
+
+      setLoaded(true);
     });
   }, [latitude, longitude, address]);
 
   if (!latitude || !longitude) return null;
 
   return (
-    <div className="map-box" style={{ flexDirection: "column", gap: 0 }}>
-      <div ref={mapRef} style={{ width: "100%", height: "100%" }} />
-      {!window.kakao?.maps && (
-        <p style={{ fontSize: 13, color: "#6b7280" }}>카카오맵 SDK를 로드해주세요.</p>
+    <div style={{ borderRadius: 20, overflow: "hidden", border: "1px solid #e5e7eb" }}>
+
+      {/* 지도 영역 - height 고정값 필수 */}
+      {error ? (
+        <div style={{
+          height: 280, display: "flex", flexDirection: "column",
+          alignItems: "center", justifyContent: "center",
+          background: "linear-gradient(135deg,#eef0ff,#ffe7f3)", gap: 8,
+        }}>
+          <span style={{ fontSize: 32 }}>🗺️</span>
+          <p style={{ fontSize: 13, color: "#6b7280", margin: 0 }}>
+            카카오맵 키를 설정해주세요.
+          </p>
+          <p style={{ fontSize: 12, color: "#9ca3af", margin: 0 }}>
+            .env.local → REACT_APP_KAKAO_MAP_APP_KEY
+          </p>
+        </div>
+      ) : (
+        /* height를 반드시 px로 고정해야 지도가 렌더링됨 */
+        <div ref={mapRef} style={{ width: "100%", height: "280px" }} />
+      )}
+
+      {/* 주소 텍스트 */}
+      {address && (
+        <div style={{
+          padding: "12px 16px", background: "#f7f8fc",
+          fontSize: 13, color: "#6b7280",
+          display: "flex", alignItems: "center", gap: 6,
+        }}>
+          📍 {address}
+        </div>
       )}
     </div>
   );

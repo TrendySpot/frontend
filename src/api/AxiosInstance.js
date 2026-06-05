@@ -1,7 +1,7 @@
 import axios from "axios";
 
-const BASE_URL = process.env.REACT_APP_API_BASE_URL || "http://localhost:8111";
-
+const BASE_URL =
+  process.env.REACT_APP_API_BASE_URL || "http://localhost:8111/api";
 // 인증이 필요한 요청용 인스턴스
 const AxiosInstance = axios.create({
   baseURL: BASE_URL,
@@ -18,7 +18,7 @@ AxiosInstance.interceptors.request.use(
     }
     return config;
   },
-  (error) => Promise.reject(error)
+  (error) => Promise.reject(error),
 );
 
 // 응답 인터셉터 - 401 발생 시 로그아웃 처리
@@ -31,7 +31,7 @@ AxiosInstance.interceptors.response.use(
       window.location.href = "/login";
     }
     return Promise.reject(error);
-  }
+  },
 );
 
 export default AxiosInstance;
