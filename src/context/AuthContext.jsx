@@ -15,9 +15,9 @@ export const AuthProvider = ({ children }) => {
     }
   });
 
-  // 로그인 - LoginResponse: { accessToken, refreshToken, nickname, role }
-  const login = ({ accessToken, refreshToken, nickname, role }) => {
-    const memberData = { nickname, role };
+  // 로그인 - LoginResponse: { accessToken, refreshToken, memberId, email, nickname, role }
+  const login = ({ accessToken, refreshToken, memberId, email, nickname, role }) => {
+    const memberData = { memberId, email, nickname, role };
     localStorage.setItem("accessToken", accessToken);
     localStorage.setItem("refreshToken", refreshToken || "");
     localStorage.setItem("member", JSON.stringify(memberData));
