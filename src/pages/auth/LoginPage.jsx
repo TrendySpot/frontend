@@ -1,4 +1,5 @@
 import { useState } from "react";
+<<<<<<< HEAD
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext";
 import { useWishlist } from "../../context/WishlistContext";
@@ -25,6 +26,11 @@ const EyeIcon = ({ visible }) => (
     )}
   </svg>
 );
+=======
+import { Link, useNavigate } from "react-router-dom";
+import useAuthStore from "../../store/authStore";
+import "./Auth.css";
+>>>>>>> origin/feature/frontend-narae
 
 const LoginPage = () => {
   const navigate  = useNavigate();
@@ -45,6 +51,7 @@ const LoginPage = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+<<<<<<< HEAD
     setLoading(true);
     try {
       const { data } = await AxiosApi.login(form.email, form.password);
@@ -56,6 +63,24 @@ const LoginPage = () => {
     } catch (err) {
       setError(err.response?.data?.message ?? "이메일 또는 비밀번호가 올바르지 않습니다.");
     } finally { setLoading(false); }
+=======
+
+    if (!form.email || !form.password) {
+      alert("이메일과 비밀번호를 입력해주세요.");
+      return;
+    }
+
+    login({
+      accessToken: "dummy-token",
+      member: {
+        email: form.email,
+        nickname: "트렌디유저",
+        role: "ROLE_ADMIN",
+      },
+    });
+
+    navigate("/");
+>>>>>>> origin/feature/frontend-narae
   };
 
   return (

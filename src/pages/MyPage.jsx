@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 import { useState } from "react";
 import { useAuth } from "../context/AuthContext";
 import ProfileForm   from "../components/mypage/ProfileForm";
@@ -11,6 +12,9 @@ const TABS = [
   { id: "wishlist", label: "찜한 스팟",   emoji: "♥" },
   { id: "tickets",  label: "예약 내역",   emoji: "🎟" },
 ];
+=======
+import "./MyPage.css";
+>>>>>>> origin/feature/frontend-narae
 
 const MyPage = () => {
   const { member } = useAuth();

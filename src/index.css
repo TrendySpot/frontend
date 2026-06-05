@@ -25,6 +25,7 @@ button {
   cursor: pointer;
 }
 
+<<<<<<< HEAD
 /* ── 헤더 ── */
 .header {
   height: 72px;
@@ -662,6 +663,9 @@ button {
 .modal-box {
   position: relative;
   z-index: 10;
+=======
+table {
+>>>>>>> origin/feature/frontend-narae
   width: 100%;
   background: white;
   border-radius: 28px;
@@ -677,6 +681,7 @@ button {
   border-bottom: 1px solid #f1f2f6;
 }
 
+<<<<<<< HEAD
 .modal-header h2 {
   font-size: 18px;
   font-weight: 800;
@@ -832,3 +837,26 @@ button {
   border-radius: 8px;
   animation: pulse 1.5s infinite;
 }
+=======
+.status-badge {
+  display: inline-block;
+  padding: 8px 14px;
+  border-radius: 999px;
+  background: #111827;
+  color: white;
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.map-box,
+.calendar-placeholder,
+.chart-placeholder {
+  height: 220px;
+  border-radius: 24px;
+  background: linear-gradient(135deg, #eef0ff, #ffe7f3);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #6b7280;
+}
+>>>>>>> origin/feature/frontend-narae

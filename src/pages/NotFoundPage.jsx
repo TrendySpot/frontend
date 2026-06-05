@@ -1,4 +1,9 @@
+<<<<<<< HEAD
 import { useNavigate } from "react-router-dom";
+=======
+import { Link } from "react-router-dom";
+import "./NotFoundPage.css";
+>>>>>>> origin/feature/frontend-narae
 
 const NotFoundPage = () => {
   const navigate = useNavigate();

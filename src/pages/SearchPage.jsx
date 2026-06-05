@@ -3,9 +3,13 @@ import { useSearchParams } from "react-router-dom";
 import { useFilter } from "../context/FilterContext";
 import AxiosApi from "../api/AxiosApi";
 import SpotCard from "../components/spot/SpotCard";
+<<<<<<< HEAD
 import Pagination from "../components/common/Pagination";
 
 const AREAS = ["전체", "서울", "경기", "인천", "부산", "대구", "광주", "대전", "울산", "제주"];
+=======
+import "./SearchPage.css";
+>>>>>>> origin/feature/frontend-narae
 
 
 const SearchPage = () => {

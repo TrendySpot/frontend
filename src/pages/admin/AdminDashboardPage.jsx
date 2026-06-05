@@ -1,3 +1,5 @@
+import "./AdminDashboardPage.css";
+
 const AdminDashboardPage = () => {
   const stats = [
     { label: "총 회원수", value: "1,284명" },

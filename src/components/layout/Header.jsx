@@ -1,7 +1,12 @@
 import { Link, useNavigate } from "react-router-dom";
+<<<<<<< HEAD
 import { useAuth } from "../../context/AuthContext";
 import { useWishlist } from "../../context/WishlistContext";
 import AxiosApi from "../../api/AxiosApi";
+=======
+import useAuthStore from "../../store/authStore";
+import "./Header.css";
+>>>>>>> origin/feature/frontend-narae
 
 const Header = () => {
   const navigate = useNavigate();

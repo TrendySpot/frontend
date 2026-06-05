@@ -3,11 +3,52 @@ import { useNavigate } from "react-router-dom";
 import { useFilter } from "../context/FilterContext";
 import AxiosApi from "../api/AxiosApi";
 import SpotCard from "../components/spot/SpotCard";
+<<<<<<< HEAD
 import Pagination from "../components/common/Pagination";
 
 
 
 const TAGS = ["전체", "팝업스토어", "전시회", "무료", "유료", "진행중", "오픈예정"];
+=======
+import "./MainPage.css";
+import { FaArrowRight } from "react-icons/fa";
+
+const dummySpots = [
+  {
+    id: 1,
+    title: "성수 감성 팝업스토어",
+    spot_type: "팝업스토어",
+    area: "서울특별시 성수동",
+    startDate: "2026.06.10",
+    endDate: "2026.07.01",
+    price: 0,
+    status: "진행중",
+    imageUrl: "https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?w=800",
+  },
+  {
+    id: 2,
+    title: "빛의 전시회",
+    spot_type: "전시회",
+    area: "서울특별시 강남구",
+    startDate: "2026.06.15",
+    endDate: "2026.08.20",
+    price: 12000,
+    status: "오픈예정",
+    imageUrl: "https://images.unsplash.com/photo-1545987796-200677ee1011?w=800",
+  },
+  {
+    id: 3,
+    title: "여름 한정 브랜드 팝업",
+    spot_type: "팝업스토어",
+    area: "부산광역시 해운대구",
+    startDate: "2026.06.20",
+    endDate: "2026.07.10",
+    price: 5000,
+    status: "D-3",
+    imageUrl: "https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=800",
+  },
+];
+>>>>>>> origin/feature/frontend-narae
 
 const MainPage = () => {
   const navigate = useNavigate();
@@ -68,8 +109,18 @@ const MainPage = () => {
 
       <section className="spot-section">
         <div className="section-title">
+<<<<<<< HEAD
           <h2>{!loading && <><span style={{ color: "#6a5cff" }}>{total}</span>개의 스팟 발견</>}</h2>
           <button onClick={() => navigate("/search")}>전체보기 →</button>
+=======
+          <h2>지금 인기 있는 스팟</h2>
+          <button
+            className="view-all-btn"
+            onClick={() => navigate("/search")}
+          >
+            전체보기 <FaArrowRight />
+          </button>
+>>>>>>> origin/feature/frontend-narae
         </div>
 
         {loading ? (

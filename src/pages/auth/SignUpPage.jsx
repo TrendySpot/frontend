@@ -1,4 +1,5 @@
 import { useState } from "react";
+<<<<<<< HEAD
 import { Link, useNavigate } from "react-router-dom";
 import AxiosApi from "../../api/AxiosApi";
 
@@ -46,6 +47,10 @@ const EyeIcon = ({ visible }) => (
     )}
   </svg>
 );
+=======
+import { useNavigate } from "react-router-dom";
+import "./Auth.css";
+>>>>>>> origin/feature/frontend-narae
 
 const SignUpPage = () => {
   const navigate = useNavigate();

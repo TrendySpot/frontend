@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 import { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
@@ -9,6 +10,10 @@ import ReviewSection from "../components/detail/ReviewSection";
 import ReservationModal from "../components/modal/ReservationModal";
 import PaymentModal from "../components/modal/PaymentModal";
 import dayjs from "dayjs";
+=======
+import { useParams } from "react-router-dom";
+import "./DetailPage.css";
+>>>>>>> origin/feature/frontend-narae
 
 const DetailPage = () => {
   const { spotId } = useParams();
