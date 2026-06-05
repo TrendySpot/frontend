@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 import { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
@@ -9,11 +8,9 @@ import MapView from "../components/detail/MapView";
 import ReviewSection from "../components/detail/ReviewSection";
 import ReservationModal from "../components/modal/ReservationModal";
 import PaymentModal from "../components/modal/PaymentModal";
+import { FaHeart, FaRegHeart } from "react-icons/fa";
 import dayjs from "dayjs";
-=======
-import { useParams } from "react-router-dom";
 import "./DetailPage.css";
->>>>>>> origin/feature/frontend-narae
 
 const DetailPage = () => {
   const { spotId } = useParams();
@@ -73,7 +70,10 @@ const DetailPage = () => {
             style={{ position: "absolute", top: 16, right: 16, width: 44, height: 44, borderRadius: "50%",
                      background: "rgba(255,255,255,0.85)", border: 0, fontSize: 22, cursor: "pointer",
                      display: "flex", alignItems: "center", justifyContent: "center", boxShadow: "0 4px 12px rgba(0,0,0,0.15)" }}>
-            <span style={{ color: isWished ? "#ff5ea8" : "#d1d5db" }}>{isWished ? "♥" : "♡"}</span>
+            {isWished
+              ? <FaHeart style={{ color: "#ff5ea8" }} />
+              : <FaRegHeart style={{ color: "#d1d5db" }} />
+            }
           </button>
           <span className="status-badge" style={{ position: "absolute", bottom: 16, left: 16 }}>진행중</span>
         </div>
@@ -112,9 +112,11 @@ const DetailPage = () => {
 
       <aside className="reservation-panel">
         <h2 style={{ marginTop: 0 }}>예약하기</h2>
-        <div className="ticket-status" style={{ marginBottom: 20 }}>
+        <div style={{ marginBottom: 20 }}>
           <strong style={{ fontSize: 15 }}>예약률 {progress}%</strong>
-          <div className="progress-bar"><div className="progress-bar-fill" style={{ width: `${progress}%` }} /></div>
+          <div className="progress-bar">
+            <div className="progress-bar-fill" style={{ width: `${progress}%` }} />
+          </div>
           {spot.schedules?.[0] && (
             <>
               <p style={{ fontSize: 13, color: "#6b7280", margin: "4px 0" }}>전체 티켓: {spot.schedules[0].totalTickets}장</p>
@@ -136,8 +138,10 @@ const DetailPage = () => {
             style={{ width: "100%", padding: "14px", borderRadius: 16, fontSize: 14, fontWeight: 700,
                      border: `2px solid ${isWished ? "#ff5ea8" : "#e5e7eb"}`,
                      background: isWished ? "#fff0f6" : "white",
-                     color: isWished ? "#ff5ea8" : "#1e1e2f" }}>
-            {isWished ? "♥ 찜 해제" : "♡ 찜하기"}
+                     color: isWished ? "#ff5ea8" : "#1e1e2f",
+                     cursor: "pointer", fontFamily: "inherit",
+                     display: "flex", alignItems: "center", justifyContent: "center", gap: 8 }}>
+            {isWished ? <><FaHeart /> 찜 해제</> : <><FaRegHeart /> 찜하기</>}
           </button>
         </div>
       </aside>

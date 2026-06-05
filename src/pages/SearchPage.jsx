@@ -3,14 +3,10 @@ import { useSearchParams } from "react-router-dom";
 import { useFilter } from "../context/FilterContext";
 import AxiosApi from "../api/AxiosApi";
 import SpotCard from "../components/spot/SpotCard";
-<<<<<<< HEAD
 import Pagination from "../components/common/Pagination";
+import "./SearchPage.css";
 
 const AREAS = ["전체", "서울", "경기", "인천", "부산", "대구", "광주", "대전", "울산", "제주"];
-=======
-import "./SearchPage.css";
->>>>>>> origin/feature/frontend-narae
-
 
 const SearchPage = () => {
   const [searchParams] = useSearchParams();
@@ -79,10 +75,10 @@ const SearchPage = () => {
           <div className="spot-grid">
             {Array.from({ length: 6 }).map((_, i) => (
               <div key={i} style={{ background: "white", borderRadius: 28, overflow: "hidden", boxShadow: "0 18px 38px rgba(29,29,47,0.08)" }}>
-                <div className="skeleton" style={{ height: 220 }} />
+                <div style={{ height: 220, background: "#f1f2f6" }} />
                 <div style={{ padding: 22 }}>
-                  <div className="skeleton" style={{ height: 12, width: "40%", marginBottom: 10 }} />
-                  <div className="skeleton" style={{ height: 16, width: "80%" }} />
+                  <div style={{ height: 12, background: "#f1f2f6", borderRadius: 8, width: "40%", marginBottom: 10 }} />
+                  <div style={{ height: 16, background: "#f1f2f6", borderRadius: 8, width: "80%" }} />
                 </div>
               </div>
             ))}

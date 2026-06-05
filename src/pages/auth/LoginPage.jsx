@@ -1,9 +1,9 @@
 import { useState } from "react";
-<<<<<<< HEAD
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext";
 import { useWishlist } from "../../context/WishlistContext";
 import AxiosApi from "../../api/AxiosApi";
+import "./Auth.css";
 
 const KAKAO_AUTH_URL = `https://kauth.kakao.com/oauth/authorize?client_id=${
   process.env.REACT_APP_KAKAO_CLIENT_ID
@@ -26,11 +26,6 @@ const EyeIcon = ({ visible }) => (
     )}
   </svg>
 );
-=======
-import { Link, useNavigate } from "react-router-dom";
-import useAuthStore from "../../store/authStore";
-import "./Auth.css";
->>>>>>> origin/feature/frontend-narae
 
 const LoginPage = () => {
   const navigate  = useNavigate();
@@ -51,11 +46,9 @@ const LoginPage = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-<<<<<<< HEAD
     setLoading(true);
     try {
       const { data } = await AxiosApi.login(form.email, form.password);
-      // 백엔드 LoginResponse: { accessToken, refreshToken, nickname, role }
       const { accessToken, refreshToken, nickname, role } = data.data;
       login({ accessToken, refreshToken, nickname, role });
       await fetchWishlist();
@@ -63,24 +56,6 @@ const LoginPage = () => {
     } catch (err) {
       setError(err.response?.data?.message ?? "이메일 또는 비밀번호가 올바르지 않습니다.");
     } finally { setLoading(false); }
-=======
-
-    if (!form.email || !form.password) {
-      alert("이메일과 비밀번호를 입력해주세요.");
-      return;
-    }
-
-    login({
-      accessToken: "dummy-token",
-      member: {
-        email: form.email,
-        nickname: "트렌디유저",
-        role: "ROLE_ADMIN",
-      },
-    });
-
-    navigate("/");
->>>>>>> origin/feature/frontend-narae
   };
 
   return (
@@ -89,15 +64,12 @@ const LoginPage = () => {
         <Link to="/" style={{ fontSize: 22, fontWeight: 900, color: "#6a5cff", textAlign: "center", display: "block" }}>
           Trendy Spot
         </Link>
-        <h1 style={{ margin: 0 }}>로그인</h1>
-        <p style={{ margin: 0, color: "#6b7280", fontSize: 14 }}>
-          Trendy Spot에서 새로운 경험을 찾아보세요.
-        </p>
+        <h1>로그인</h1>
+        <p>Trendy Spot에서 새로운 경험을 찾아보세요.</p>
 
         <input className="input-field" name="email" type="email" placeholder="이메일"
           value={form.email} onChange={handleChange} required autoComplete="email" />
 
-        {/* 비밀번호 + 눈 아이콘 */}
         <div style={{ position: "relative", display: "flex", alignItems: "center" }}>
           <input className="input-field" name="password"
             type={showPw ? "text" : "password"}
@@ -112,9 +84,7 @@ const LoginPage = () => {
           </button>
         </div>
 
-        {error && (
-          <p style={{ fontSize: 13, color: "#ef4444", fontWeight: 500, margin: 0 }}>{error}</p>
-        )}
+        {error && <p style={{ fontSize: 13, color: "#ef4444", fontWeight: 500, margin: 0 }}>{error}</p>}
 
         <button className="btn-primary" type="submit" disabled={loading}
           style={{ width: "100%", padding: "16px", fontSize: 15, borderRadius: 16 }}>
