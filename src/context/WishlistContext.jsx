@@ -1,9 +1,11 @@
-import { createContext, useContext, useState, useCallback } from "react";
+import { createContext, useContext, useState, useCallback, useEffect } from "react";
 import AxiosApi from "../api/AxiosApi";
+import { useAuth } from "./AuthContext";
 
 const WishlistContext = createContext(null);
 
 export const WishlistProvider = ({ children }) => {
+  const { isLoggedIn } = useAuth();
   const [wishedIds, setWishedIds] = useState(new Set());
   const [wishlist, setWishlist]   = useState([]);
   const [loading, setLoading]     = useState(false);
@@ -21,6 +23,16 @@ export const WishlistProvider = ({ children }) => {
       setLoading(false);
     }
   }, []);
+
+  // 로그인 상태 변경 시 자동으로 찜 목록 로드
+  useEffect(() => {
+    if (isLoggedIn) {
+      fetchWishlist();
+    } else {
+      setWishedIds(new Set());
+      setWishlist([]);
+    }
+  }, [isLoggedIn, fetchWishlist]);
 
   const toggle = async (spotId) => {
     const isWished = wishedIds.has(spotId);

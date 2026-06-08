@@ -1,12 +1,22 @@
 import { useTicketSocket } from "../../hooks/useTicketSocket";
 
-const TicketStatus = ({ spotId, selectedSchedule }) => {
+const TicketStatus = ({ spotId, schedules = [] }) => {
   const { ticketStatus, isConnected } = useTicketSocket(spotId);
 
-  const total    = ticketStatus?.totalTickets    ?? selectedSchedule?.totalTickets    ?? 0;
-  const remained = ticketStatus?.remainedTickets ?? selectedSchedule?.remainedTickets ?? 0;
-  const booked   = total - remained;
-  const percent  = total > 0 ? Math.round((booked / total) * 100) : 0;
+  // 전체 스케줄 합계 계산
+  const totalFromSchedules   = schedules.reduce((sum, s) => sum + (s.totalTickets ?? 0), 0);
+  const remainedFromSchedules = schedules.reduce((sum, s) => sum + (s.remainedTickets ?? 0), 0);
+
+  // WebSocket 실시간 메시지가 오면 해당 스케줄만 업데이트
+  const total    = totalFromSchedules;
+  const remained = ticketStatus
+    ? remainedFromSchedules - (ticketStatus.totalTickets - ticketStatus.remainedTickets) +
+      (schedules.find(s => s.scheduleId === ticketStatus.scheduleId)?.totalTickets ?? 0) -
+      (schedules.find(s => s.scheduleId === ticketStatus.scheduleId)?.remainedTickets ?? 0)
+    : remainedFromSchedules;
+
+  const booked  = total - remained;
+  const percent = total > 0 ? Math.round((booked / total) * 100) : 0;
 
   return (
     <div style={{ background: "#f7f8fc", borderRadius: 24, padding: 24 }}>

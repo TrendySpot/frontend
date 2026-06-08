@@ -53,9 +53,10 @@ const DetailPage = () => {
 
   if (!spot) return null;
 
-  const progress = spot.schedules?.[0]
-    ? Math.round(((spot.schedules[0].totalTickets - spot.schedules[0].remainedTickets) / spot.schedules[0].totalTickets) * 100)
-    : 0;
+  const totalTickets    = (spot.schedules ?? []).reduce((sum, s) => sum + (s.totalTickets ?? 0), 0);
+  const remainedTickets = (spot.schedules ?? []).reduce((sum, s) => sum + (s.remainedTickets ?? 0), 0);
+  const bookedTickets   = totalTickets - remainedTickets;
+  const progress = totalTickets > 0 ? Math.round((bookedTickets / totalTickets) * 100) : 0;
 
   return (
     <div className="detail-page">
@@ -96,7 +97,7 @@ const DetailPage = () => {
           )}
 
           <h2>예약 현황</h2>
-          <TicketStatus spotId={Number(spotId)} selectedSchedule={spot.schedules?.[0]} />
+          <TicketStatus spotId={Number(spotId)} schedules={spot.schedules ?? []} />
 
           {spot.latitude && spot.longitude && (
             <>
@@ -117,10 +118,10 @@ const DetailPage = () => {
           <div className="progress-bar">
             <div className="progress-bar-fill" style={{ width: `${progress}%` }} />
           </div>
-          {spot.schedules?.[0] && (
+          {totalTickets > 0 && (
             <>
-              <p style={{ fontSize: 13, color: "#6b7280", margin: "4px 0" }}>전체 티켓: {spot.schedules[0].totalTickets}장</p>
-              <p style={{ fontSize: 13, color: "#6b7280", margin: "4px 0" }}>남은 티켓: {spot.schedules[0].remainedTickets}장</p>
+              <p style={{ fontSize: 13, color: "#6b7280", margin: "4px 0" }}>전체 티켓: {totalTickets}장</p>
+              <p style={{ fontSize: 13, color: "#6b7280", margin: "4px 0" }}>남은 티켓: {remainedTickets}장</p>
             </>
           )}
         </div>
@@ -148,7 +149,7 @@ const DetailPage = () => {
 
       <ReservationModal isOpen={showReservation} onClose={() => setShowReservation(false)} spot={spot} onConfirm={handleReservationConfirm} />
       <PaymentModal isOpen={showPayment} onClose={() => setShowPayment(false)} spot={spot} reservation={reservation}
-        onSuccess={() => { setShowPayment(false); navigate("/mypage"); }} />
+        onSuccess={() => { setShowPayment(false); AxiosApi.getSpotDetail(spotId).then(({ data }) => setSpot(data.data)); }} />
     </div>
   );
 };

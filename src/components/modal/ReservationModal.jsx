@@ -1,43 +1,22 @@
 import { useState } from "react";
 import dayjs from "dayjs";
-import { useAuth } from "../../context/AuthContext";
-import AxiosApi from "../../api/AxiosApi";
 
 const ReservationModal = ({ isOpen, onClose, spot, onConfirm }) => {
-  const { member } = useAuth();
   const [selectedSchedule, setSelectedSchedule] = useState(null);
   const [count, setCount] = useState(1);
-  const [loading, setLoading] = useState(false);
 
   if (!isOpen) return null;
 
   const schedules = spot?.schedules ?? [];
 
-  const handleConfirm = async () => {
+  const handleConfirm = () => {
     if (!selectedSchedule) { alert("날짜를 선택해주세요."); return; }
-    if (!member) { alert("로그인이 필요합니다."); return; }
-
-    setLoading(true);
-    try {
-      // 티켓 생성 API 호출
-      const { data } = await AxiosApi.reserve({
-        scheduleId: selectedSchedule.scheduleId,
-        ticketCount: count,
-      });
-      const ticketId = data.data.ticketId;
-
-      // 티켓 ID를 포함해서 결제 모달로 전달
-      onConfirm({
-        ticketId,
-        scheduleId: selectedSchedule.scheduleId,
-        count,
-        eventDate: selectedSchedule.eventDate,
-      });
-    } catch (e) {
-      alert(e.response?.data?.message ?? "예약에 실패했습니다.");
-    } finally {
-      setLoading(false);
-    }
+    // 티켓 생성 없이 날짜/인원 정보만 전달
+    onConfirm({
+      scheduleId: selectedSchedule.scheduleId,
+      count,
+      eventDate: selectedSchedule.eventDate,
+    });
   };
 
   return (
@@ -69,7 +48,8 @@ const ReservationModal = ({ isOpen, onClose, spot, onConfirm }) => {
                     <button key={sc.scheduleId} disabled={isFull} onClick={() => setSelectedSchedule(sc)}
                       style={{
                         border: `2px solid ${isSel ? "#6a5cff" : "#e5e7eb"}`,
-                        borderRadius: 12, padding: "10px 8px", fontSize: 12, fontWeight: 600, cursor: isFull ? "not-allowed" : "pointer",
+                        borderRadius: 12, padding: "10px 8px", fontSize: 12, fontWeight: 600,
+                        cursor: isFull ? "not-allowed" : "pointer",
                         background: isSel ? "#f0eeff" : "white", color: isFull ? "#c0c0c0" : "#1e1e2f",
                       }}>
                       <div>{dayjs(sc.eventDate).format("MM/DD (ddd)")}</div>
@@ -100,9 +80,10 @@ const ReservationModal = ({ isOpen, onClose, spot, onConfirm }) => {
             </div>
           )}
 
-          <button className="btn-primary" style={{ width: "100%", padding: "16px", fontSize: 15, borderRadius: 16 }}
-            onClick={handleConfirm} disabled={loading}>
-            {loading ? "처리 중..." : "예약하기"}
+          <button className="btn-primary"
+            style={{ width: "100%", padding: "16px", fontSize: 15, borderRadius: 16 }}
+            onClick={handleConfirm}>
+            예약하기
           </button>
         </div>
       </div>
