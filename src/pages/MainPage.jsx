@@ -17,6 +17,7 @@ const MainPage = () => {
     spotType,
     free,
     ongoing,
+    date,
     resetFilters,
     toQueryParams,
     setMainTagFilter,
@@ -29,6 +30,14 @@ const MainPage = () => {
   const [searchArea, setSearchArea] = useState("");
   const [activeTag, setActiveTag]   = useState("전체");
   const [searchDate, setSearchDate] = useState("");
+  const [filterReady, setFilterReady] = useState(false);
+
+  useEffect(() => {
+    resetFilters();
+    setActiveTag("전체");
+    setFilterReady(true);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const fetchSpots = useCallback(async (p = 0) => {
     setLoading(true);
@@ -40,9 +49,12 @@ const MainPage = () => {
       console.error(e);
     } finally { setLoading(false); }
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [spotType, free, ongoing]);
+  }, [spotType, free, ongoing, date]);
 
-  useEffect(() => { fetchSpots(0); }, [fetchSpots]);
+  useEffect(() => {
+    if (!filterReady) return;
+    fetchSpots(0);
+  }, [filterReady, fetchSpots]);
 
   const handleTag = (tag) => {
     setActiveTag(tag);
