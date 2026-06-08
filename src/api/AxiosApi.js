@@ -52,12 +52,12 @@ const AxiosApi = {
   verifyPayment: (body) => AxiosInstance.post("/payments/complete", body),
 
   // ── 리뷰 (Review) ────────────────────────────────────────
-  getReviews: (spotId, page, size) =>
-    AxiosInstance.get(`/spots/${spotId}/reviews`, { params: { page, size } }),
-  writeReview: (spotId, data) =>
-    AxiosInstance.post(`/spots/${spotId}/reviews`, data),
-  updateReview: (spotId, reviewId, data) =>
-    AxiosInstance.patch(`/spots/${spotId}/reviews/${reviewId}`, data),
+  getReviews: (spotId, params) =>
+    AxiosInstance.get(`/spots/${spotId}/reviews`, { params }),
+  writeReview: (spotId, content) =>
+    AxiosInstance.post(`/spots/${spotId}/reviews`, { content }),
+  updateReview: (spotId, reviewId, content) =>
+    AxiosInstance.patch(`/spots/${spotId}/reviews/${reviewId}`, { content }),
   deleteReview: (spotId, reviewId) =>
     AxiosInstance.delete(`/spots/${spotId}/reviews/${reviewId}`),
 

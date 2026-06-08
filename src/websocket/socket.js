@@ -6,7 +6,7 @@ let stompClient = null;
 export const connectSocket = (onConnect) => {
   if (stompClient?.active) return stompClient;
   stompClient = new Client({
-    webSocketFactory: () => new SockJS("/ws"),
+    webSocketFactory: () => new SockJS("http://localhost:8111/ws"),
     reconnectDelay: 5000,
     onConnect: () => {
       console.log("[WS] STOMP connected");
@@ -21,7 +21,11 @@ export const connectSocket = (onConnect) => {
 export const subscribeTicketStatus = (spotId, callback) => {
   if (!stompClient?.active) return () => {};
   const sub = stompClient.subscribe(`/topic/tickets/${spotId}`, (msg) => {
-    try { callback(JSON.parse(msg.body)); } catch (e) { console.error(e); }
+    try {
+      callback(JSON.parse(msg.body));
+    } catch (e) {
+      console.error(e);
+    }
   });
   return () => sub.unsubscribe();
 };

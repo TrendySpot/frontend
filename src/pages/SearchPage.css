@@ -42,6 +42,23 @@
   outline: none;
 }
 
+.filter-group input[type="date"] {
+  width: 100%;
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
+  padding: 10px 14px;
+  font-size: 13px;
+  font-family: inherit;
+  outline: none;
+  background: white;
+  color: #1e1e2f;
+}
+
+.filter-group input[type="date"]:focus {
+  border-color: #6a5cff;
+  box-shadow: 0 0 0 3px rgba(106, 92, 255, 0.12);
+}
+
 .filter-group button {
   margin: 0 4px 4px 0;
   border: 0;

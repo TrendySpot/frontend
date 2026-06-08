@@ -1,14 +1,12 @@
 import { useEffect, useRef, useState } from "react";
 
 const MapView = ({ latitude, longitude, address }) => {
-  const mapRef  = useRef(null);
-  const [loaded, setLoaded] = useState(false);
-  const [error,  setError]  = useState(false);
+  const mapRef = useRef(null);
+  const [error, setError] = useState(false);
 
   useEffect(() => {
     if (!latitude || !longitude) return;
 
-    // SDK 미로드 시 처리
     if (!window.kakao || !window.kakao.maps) {
       setError(true);
       return;
@@ -33,9 +31,9 @@ const MapView = ({ latitude, longitude, address }) => {
           content: `<div style="padding:8px 12px;font-size:13px;font-weight:600;font-family:Pretendard,sans-serif">${address}</div>`,
         });
         infowindow.open(map, marker);
+        // 인포윈도우 높이만큼 지도를 위로 올려서 마커가 화면 가운데 오도록
+        map.panBy(0, -60);
       }
-
-      setLoaded(true);
     });
   }, [latitude, longitude, address]);
 
@@ -43,8 +41,6 @@ const MapView = ({ latitude, longitude, address }) => {
 
   return (
     <div style={{ borderRadius: 20, overflow: "hidden", border: "1px solid #e5e7eb" }}>
-
-      {/* 지도 영역 - height 고정값 필수 */}
       {error ? (
         <div style={{
           height: 280, display: "flex", flexDirection: "column",
@@ -60,11 +56,9 @@ const MapView = ({ latitude, longitude, address }) => {
           </p>
         </div>
       ) : (
-        /* height를 반드시 px로 고정해야 지도가 렌더링됨 */
         <div ref={mapRef} style={{ width: "100%", height: "280px" }} />
       )}
 
-      {/* 주소 텍스트 */}
       {address && (
         <div style={{
           padding: "12px 16px", background: "#f7f8fc",
