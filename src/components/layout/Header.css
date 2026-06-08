@@ -1,0 +1,45 @@
+.header {
+  height: 72px;
+  padding: 0 48px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: white;
+  position: sticky;
+  top: 0;
+  z-index: 20;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.06);
+}
+
+.logo {
+  font-size: 24px;
+  font-weight: 900;
+  color: #6a5cff;
+}
+
+.nav {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.nav a {
+  font-size: 15px;
+  font-weight: 500;
+  color: #1e1e2f;
+  transition: color 0.15s;
+}
+
+.nav a:hover { color: #6a5cff; }
+
+.nav button {
+  border: 0;
+  background: transparent;
+  font-size: 15px;
+  font-weight: 500;
+  color: #1e1e2f;
+  cursor: pointer;
+  font-family: inherit;
+}
+
+.nav button:hover { color: #6a5cff; }
