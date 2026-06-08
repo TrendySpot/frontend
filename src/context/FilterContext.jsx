@@ -21,6 +21,43 @@ export const FilterProvider = ({ children }) => {
     setSort("createdAt,DESC");
   };
 
+  const setMainTagFilter = (tag) => {
+  setArea("");
+  setDate("");
+  setKeyword("");
+  setSort("createdAt,DESC");
+
+  if (tag === "전체") {
+    setSpotType("");
+    setFree(null);
+    setOngoing(null);
+  } else if (tag === "팝업스토어") {
+    setSpotType("POPUP");
+    setFree(null);
+    setOngoing(null);
+  } else if (tag === "전시회") {
+    setSpotType("EXHIBIT");
+    setFree(null);
+    setOngoing(null);
+  } else if (tag === "무료") {
+    setSpotType("");
+    setFree(true);
+    setOngoing(null);
+  } else if (tag === "유료") {
+    setSpotType("");
+    setFree(false);
+    setOngoing(null);
+  } else if (tag === "진행중") {
+    setSpotType("");
+    setFree(null);
+    setOngoing(true);
+  } else if (tag === "오픈예정") {
+    setSpotType("");
+    setFree(null);
+    setOngoing(false);
+  }
+};
+
   const toQueryParams = () => {
     const params = {};
 
@@ -54,6 +91,7 @@ export const FilterProvider = ({ children }) => {
         setSort,
         resetFilters,
         toQueryParams,
+        setMainTagFilter,
       }}
     >
       {children}

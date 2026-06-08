@@ -13,7 +13,14 @@ const AREAS = ["전체", "서울", "경기", "인천", "부산", "대구", "광�
 
 const MainPage = () => {
   const navigate = useNavigate();
-  const { spotType, setSpotType, free, setFree, ongoing, setOngoing, resetFilters, toQueryParams } = useFilter();
+  const {
+    spotType,
+    free,
+    ongoing,
+    resetFilters,
+    toQueryParams,
+    setMainTagFilter,
+  } = useFilter();
   const [spots, setSpots]           = useState([]);
   const [loading, setLoading]       = useState(false);
   const [page, setPage]             = useState(0);
@@ -39,13 +46,7 @@ const MainPage = () => {
 
   const handleTag = (tag) => {
     setActiveTag(tag);
-    if      (tag === "전체")       resetFilters();
-    else if (tag === "팝업스토어") setSpotType("POPUP");
-    else if (tag === "전시회")     setSpotType("EXHIBIT");
-    else if (tag === "무료")       setFree(true);
-    else if (tag === "유료")       setFree(false);
-    else if (tag === "진행중")     setOngoing(true);
-    else if (tag === "오픈예정")   setOngoing(false);
+    setMainTagFilter(tag);
   };
 
   return (
