@@ -48,7 +48,7 @@ const AdminDashboardPage = () => {
       icon: "🎟️",
     },
     {
-      label: "전체 리뷰 수",
+      label: "전체 댓글 수",
       value: `${dashboard.totalReviews}개`,
       icon: "💬",
     },
@@ -73,8 +73,8 @@ const AdminDashboardPage = () => {
       icon: "🏬",
     },
     {
-      title: "리뷰 관리",
-      description: "전체 리뷰 조회 및 부적절한 리뷰 삭제",
+      title: "댓글 관리",
+      description: "전체 댓글 조회 및 부적절한 댓글 삭제",
       path: "/admin/reviews",
       icon: "📝",
     },
@@ -106,7 +106,7 @@ const AdminDashboardPage = () => {
           <section className="admin-manage-section">
             <div className="admin-section-title">
               <h2>관리 메뉴</h2>
-              <p>관리자 권한으로 회원, 스팟, 리뷰 데이터를 관리할 수 있습니다.</p>
+              <p>관리자 권한으로 회원, 스팟, 댓글 데이터를 관리할 수 있습니다.</p>
             </div>
 
             <div className="admin-menu-grid">

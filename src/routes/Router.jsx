@@ -1,6 +1,9 @@
 import { Routes, Route } from "react-router-dom";
 import Layout from "../components/layout/Layout";
 import ProtectedRoute from "../components/common/ProtectedRoute";
+import AdminMemberPage from "../pages/admin/AdminMemberPage";
+import AdminSpotPage from "../pages/admin/AdminSpotPage";
+import AdminReviewPage from "../pages/admin/AdminReviewPage";
 
 import MainPage           from "../pages/MainPage";
 import SearchPage         from "../pages/SearchPage";
@@ -29,6 +32,30 @@ const Router = () => {
       <Route path="/admin" element={
         <ProtectedRoute adminOnly><AdminDashboardPage /></ProtectedRoute>
       } />
+      <Route
+        path="/admin/members"
+        element={
+          <ProtectedRoute adminOnly>
+            <AdminMemberPage />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/admin/spots"
+        element={
+          <ProtectedRoute adminOnly>
+            <AdminSpotPage />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/admin/reviews"
+        element={
+          <ProtectedRoute adminOnly>
+            <AdminReviewPage />
+          </ProtectedRoute>
+        }
+      />
 
       <Route path="*" element={<NotFoundPage />} />
     </Routes>
