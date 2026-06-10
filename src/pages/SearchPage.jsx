@@ -32,25 +32,28 @@ const SearchPage = () => {
     setFree,
     sort,
     setSort,
+    keyword,
+    setKeyword,
     toQueryParams,
   } = useFilter();
   const [localArea, setLocalArea] = useState(area || "전체");
+  const [localDate, setLocalDate] = useState(date || "");
   const [spots, setSpots] = useState([]);
   const [loading, setLoading] = useState(false);
   const [page, setPage] = useState(0);
   const [totalPages, setTotalPages] = useState(1);
   const [total, setTotal] = useState(0);
   const [ready, setReady] = useState(false);
-  const [localDate, setLocalDate] = useState(date || "");
 
   useEffect(() => {
     const st = searchParams.get("spotType");
     const areaParam = searchParams.get("area");
     const dateParam = searchParams.get("date");
+    const kwParam = searchParams.get("keyword");
 
-    if (st) {
-      setSpotType(st);
-    }
+    if (st) setSpotType(st);
+    if (kwParam) setKeyword(kwParam);
+    else setKeyword("");
 
     if (areaParam) {
       setLocalArea(areaParam);
@@ -69,7 +72,7 @@ const SearchPage = () => {
     }
 
     setReady(true);
-  }, [searchParams, setArea, setSpotType, setDate]);
+  }, [searchParams, setArea, setSpotType, setDate, setKeyword]);
 
   const fetchSpots = useCallback(
     async (p = 0) => {
@@ -92,7 +95,7 @@ const SearchPage = () => {
       }
       // eslint-disable-next-line react-hooks/exhaustive-deps
     },
-    [area, spotType, free, sort, date],
+    [area, spotType, free, sort, date, keyword, toQueryParams],
   );
 
   useEffect(() => {
@@ -104,6 +107,24 @@ const SearchPage = () => {
     <div className="search-page">
       <aside className="filter-sidebar">
         <h2>필터</h2>
+
+        {/* 키워드 표시 */}
+        {keyword && (
+          <div
+            style={{
+              marginBottom: 16,
+              padding: "10px 14px",
+              background: "#f0eeff",
+              borderRadius: 12,
+              fontSize: 14,
+              color: "#534AB7",
+              fontWeight: 600,
+            }}
+          >
+            🔍 "{keyword}" 검색 결과
+          </div>
+        )}
+
         <div className="filter-group">
           <label>지역</label>
           <select
@@ -152,7 +173,6 @@ const SearchPage = () => {
             </button>
           ))}
         </div>
-
         <div className="filter-group">
           <label>날짜</label>
           <input
@@ -189,7 +209,13 @@ const SearchPage = () => {
                   boxShadow: "0 18px 38px rgba(29,29,47,0.08)",
                 }}
               >
-                <div style={{ height: 220, background: "#f1f2f6" }} />
+                <div
+                  style={{
+                    height: 220,
+                    background: "#f1f2f6",
+                    animation: "pulse 1.5s infinite",
+                  }}
+                />
                 <div style={{ padding: 22 }}>
                   <div
                     style={{
