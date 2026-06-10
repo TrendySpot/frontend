@@ -58,6 +58,9 @@ const Header = () => {
       <nav className="nav">
         {isLoggedIn ? (
           <>
+            <span style={{ fontSize: 13, fontWeight: 700, color: "#6a5cff" }}>
+              {member?.nickname}
+            </span>
             <Link to="/mypage" className="nav-icon-item">
               <svg
                 width="24"
@@ -70,7 +73,7 @@ const Header = () => {
                 <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
                 <circle cx="12" cy="7" r="4" />
               </svg>
-              <span>마이</span>
+              <span>마이페이지</span>
             </Link>
             {member?.role === "ROLE_ADMIN" && (
               <Link to="/admin" className="nav-icon-item">
