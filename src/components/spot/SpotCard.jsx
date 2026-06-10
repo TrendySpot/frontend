@@ -10,11 +10,7 @@ import "./SpotCard.css";
 const getStatus = (startDate, endDate) => {
   const today = dayjs();
   const start = dayjs(startDate);
-  const end   = dayjs(endDate);
   if (today.isBefore(start)) return "오픈예정";
-  if (today.isAfter(end))    return "종료";
-  const d = end.diff(today, "day");
-  if (d <= 3) return `D-${d}`;
   return "진행중";
 };
 
@@ -26,7 +22,13 @@ const SpotCard = ({ spot }) => {
 
   const handleWish = (e) => {
     e.preventDefault();
-    if (!isLoggedIn) { navigate("/login"); return; }
+
+    if (!isLoggedIn) {
+      const goLogin = window.confirm("로그인이 필요한 기능입니다.");
+      if (goLogin) navigate("/login");
+      return;
+    }
+
     toggle(spot.spotId);
   };
 
