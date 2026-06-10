@@ -6,6 +6,7 @@ import AxiosApi from "../../api/AxiosApi";
 import "./Auth.css";
 
 const KAKAO_AUTH_URL = `http://localhost:8111/oauth2/authorization/kakao`;
+const GOOGLE_AUTH_URL = `http://localhost:8111/oauth2/authorization/google`;
 
 const EyeIcon = ({ visible }) => (
   <svg
@@ -166,6 +167,9 @@ const LoginPage = () => {
 
         <a href={KAKAO_AUTH_URL} className="btn-kakao">
           카카오 로그인
+        </a>
+        <a href={GOOGLE_AUTH_URL} className="btn-google">
+          구글 로그인
         </a>
 
         <Link

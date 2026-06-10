@@ -84,8 +84,13 @@
   gap: 8px;
 }
 
-.btn-primary:hover { opacity: 0.9; }
-.btn-primary:disabled { opacity: 0.6; cursor: not-allowed; }
+.btn-primary:hover {
+  opacity: 0.9;
+}
+.btn-primary:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
 
 .btn-secondary {
   border: 1px solid #e5e7eb;
@@ -100,7 +105,9 @@
   transition: background 0.15s;
 }
 
-.btn-secondary:hover { background: #f7f8fc; }
+.btn-secondary:hover {
+  background: #f7f8fc;
+}
 
 .btn-kakao {
   border: 0;
@@ -119,4 +126,31 @@
   transition: opacity 0.2s;
 }
 
-.btn-kakao:hover { opacity: 0.9; }
+.btn-kakao:hover {
+  opacity: 0.9;
+}
+
+.btn-google {
+  border: 1.5px solid #e5e7eb;
+  border-radius: 16px;
+  padding: 16px;
+  color: #1e1e2f;
+  font-weight: 800;
+  font-size: 15px;
+  font-family: inherit;
+  background: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-decoration: none;
+  cursor: pointer;
+  transition:
+    background 0.2s,
+    border-color 0.2s;
+  gap: 8px;
+}
+
+.btn-google:hover {
+  background: #f7f8fc;
+  border-color: #d1d5db;
+}
