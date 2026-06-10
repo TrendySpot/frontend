@@ -1,4 +1,4 @@
-import { createContext, useContext, useState } from "react";
+import { createContext, useContext, useState, useCallback } from "react";
 
 const FilterContext = createContext(null);
 
@@ -58,9 +58,8 @@ export const FilterProvider = ({ children }) => {
     }
   };
 
-  const toQueryParams = () => {
+  const toQueryParams = useCallback(() => {
     const params = {};
-
     if (area) params.area = area;
     if (date) params.date = date;
     if (spotType) params.spotType = spotType;
@@ -68,9 +67,8 @@ export const FilterProvider = ({ children }) => {
     if (ongoing !== null) params.ongoing = ongoing;
     if (keyword) params.keyword = keyword;
     if (sort) params.sort = sort;
-
     return params;
-  };
+  }, [area, date, spotType, free, ongoing, keyword, sort]);
 
   return (
     <FilterContext.Provider
