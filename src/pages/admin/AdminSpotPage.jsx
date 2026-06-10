@@ -8,19 +8,37 @@ const AdminSpotPage = () => {
     spotType: "POPUP",
     area: "",
     address: "",
+    latitude: null,
+    longitude: null,
     startDate: "",
     endDate: "",
     price: 0,
+    totalTickets: 100,
     imageUrl: "",
     description: "",
   });
+
+  const AREAS = [
+    "서울",
+    "경기",
+    "인천",
+    "부산",
+    "대구",
+    "광주",
+    "대전",
+    "울산",
+    "제주",
+  ];
 
   const handleChange = (e) => {
     const { name, value } = e.target;
 
     setForm((prev) => ({
       ...prev,
-      [name]: name === "price" ? Number(value) : value,
+      [name]:
+        name === "price" || name === "totalTickets"
+          ? Number(value)
+          : value,
     }));
   };
 
@@ -36,15 +54,18 @@ const AdminSpotPage = () => {
         spotType: "POPUP",
         area: "",
         address: "",
+        latitude: null,
+        longitude: null,
         startDate: "",
         endDate: "",
         price: 0,
+        totalTickets: 100,
         imageUrl: "",
         description: "",
       });
     } catch (e) {
       console.error("스팟 등록 실패", e);
-      alert("스팟 등록에 실패했습니다.");
+      alert(e.response?.data?.message || "스팟 등록에 실패했습니다.");
     }
   };
 
@@ -80,13 +101,20 @@ const AdminSpotPage = () => {
 
           <div className="form-row">
             <label>지역</label>
-            <input
+            <select
               name="area"
               value={form.area}
               onChange={handleChange}
-              placeholder="예: 서울"
               required
-            />
+            >
+              <option value="">지역 선택</option>
+
+              {AREAS.map((area) => (
+                <option key={area} value={area}>
+                  {area}
+                </option>
+              ))}
+            </select>
           </div>
 
           <div className="form-row">
@@ -130,6 +158,19 @@ const AdminSpotPage = () => {
               value={form.price}
               onChange={handleChange}
               min="0"
+            />
+          </div>
+
+          <div className="form-row">
+            <label>총 티켓 수량</label>
+            <input
+              type="number"
+              name="totalTickets"
+              value={form.totalTickets}
+              onChange={handleChange}
+              min="1"
+              placeholder="예: 100"
+              required
             />
           </div>
 
