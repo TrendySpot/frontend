@@ -6,6 +6,8 @@ import SpotCard from "../components/spot/SpotCard";
 import Pagination from "../components/common/Pagination";
 import { FaArrowRight } from "react-icons/fa";
 import "./MainPage.css";
+import PopularSpotSwiper from "../components/swiper/PopularSpotSwiper";
+import dayjs from "dayjs";
 
 const TAGS = ["전체", "팝업스토어", "전시회", "무료", "유료", "진행중", "오픈예정"];
 
@@ -61,8 +63,26 @@ const MainPage = () => {
     setMainTagFilter(tag);
   };
 
+  const today = dayjs().format("YYYY-MM-DD");
+
+  const todaySpots = spots
+    .filter((spot) => {
+      const start = dayjs(spot.startDate);
+      const end = dayjs(spot.endDate);
+      const now = dayjs(today);
+
+      return (
+        now.isSame(start, "day") ||
+        now.isSame(end, "day") ||
+        (now.isAfter(start) && now.isBefore(end))
+      );
+    })
+    .slice(0, 6);
+
   return (
     <div>
+      <PopularSpotSwiper spots={spots} />
+
       <section className="hero-section">
         <div className="hero-text">
           <p className="hero-label">✨ Premium Event Discovery</p>
@@ -104,6 +124,34 @@ const MainPage = () => {
             검색
           </button>
         </div>
+      </section>
+
+      <section className="today-section">
+        <div className="section-title">
+          <h2>오늘 방문 가능한 스팟</h2>
+
+          <button
+            className="view-all-btn"
+            onClick={() => {
+              resetFilters();
+              navigate(`/search?date=${today}`);
+            }}
+          >
+            더보기 <FaArrowRight />
+          </button>
+        </div>
+
+        {todaySpots.length === 0 ? (
+          <div className="empty-today">
+            오늘 방문 가능한 스팟이 없습니다.
+          </div>
+        ) : (
+          <div className="spot-grid">
+            {todaySpots.map((spot) => (
+              <SpotCard key={spot.spotId} spot={spot} />
+            ))}
+          </div>
+        )}
       </section>
 
       <section className="category-section">
