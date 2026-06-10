@@ -1,9 +1,8 @@
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
 import { useFilter } from "../context/FilterContext";
 import AxiosApi from "../api/AxiosApi";
 import SpotCard from "../components/spot/SpotCard";
-import Pagination from "../components/common/Pagination";
 import { FaArrowRight } from "react-icons/fa";
 import "./MainPage.css";
 import PopularSpotSwiper from "../components/swiper/PopularSpotSwiper";
@@ -26,32 +25,69 @@ const MainPage = () => {
   } = useFilter();
   const [spots, setSpots]           = useState([]);
   const [loading, setLoading]       = useState(false);
-  const [page, setPage]             = useState(0);
-  const [totalPages, setTotalPages] = useState(1);
-  const [total, setTotal]           = useState(0);
   const [searchArea, setSearchArea] = useState("");
   const [activeTag, setActiveTag]   = useState("전체");
   const [searchDate, setSearchDate] = useState("");
   const [filterReady, setFilterReady] = useState(false);
+  const [allSpots, setAllSpots] = useState([]);
+
+  const fetchAllSpots = useCallback(async () => {
+    try {
+      const { data } = await AxiosApi.getSpots({
+        page: 0,
+        size: 100,
+        sort: "createdAt,DESC",
+      });
+
+      setAllSpots(data.data.content);
+    } catch (e) {
+      console.error(e);
+    }
+  }, []);
 
   useEffect(() => {
     resetFilters();
     setActiveTag("전체");
+    fetchAllSpots();
     setFilterReady(true);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [fetchAllSpots]);
 
   const fetchSpots = useCallback(async (p = 0) => {
     setLoading(true);
     try {
-      const { data } = await AxiosApi.getSpots({ ...toQueryParams(), page: p, size: 12 });
+      const { data } = await AxiosApi.getSpots({ ...toQueryParams(), page: p, size: 9 });
       const pd = data.data;
-      setSpots(pd.content); setTotalPages(pd.totalPages); setTotal(pd.totalElements); setPage(p);
+
+      let content = activeTag === "전체" ? pd.content : allSpots;
+
+      if (activeTag === "오픈예정") {
+        content = content.filter((spot) =>
+          dayjs().isBefore(dayjs(spot.startDate), "day")
+        );
+      }
+
+      setSpots(content.slice(0, 9));
+
+      if (activeTag === "진행중") {
+        content = content.filter((spot) => {
+          const today = dayjs();
+
+          return (
+            today.isSame(dayjs(spot.startDate), "day") ||
+            today.isSame(dayjs(spot.endDate), "day") ||
+            (today.isAfter(dayjs(spot.startDate), "day") &&
+              today.isBefore(dayjs(spot.endDate), "day"))
+          );
+        });
+      }
+
+      setSpots(content);
     } catch (e) {
       console.error(e);
     } finally { setLoading(false); }
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [spotType, free, ongoing, date]);
+  }, [spotType, free, ongoing, date, activeTag, allSpots]);
 
   useEffect(() => {
     if (!filterReady) return;
@@ -60,12 +96,11 @@ const MainPage = () => {
 
   const handleTag = (tag) => {
     setActiveTag(tag);
-    setMainTagFilter(tag);
   };
 
   const today = dayjs().format("YYYY-MM-DD");
 
-  const todaySpots = spots
+  const todaySpots = allSpots
     .filter((spot) => {
       const start = dayjs(spot.startDate);
       const end = dayjs(spot.endDate);
@@ -79,9 +114,52 @@ const MainPage = () => {
     })
     .slice(0, 6);
 
+    const filteredSpots = useMemo(() => {
+      const today = dayjs();
+
+      let result = [...allSpots];
+
+      if (activeTag === "팝업스토어") {
+        result = result.filter((spot) => spot.spotType === "POPUP");
+      }
+
+      if (activeTag === "전시회") {
+        result = result.filter((spot) => spot.spotType === "EXHIBIT");
+      }
+
+      if (activeTag === "무료") {
+        result = result.filter((spot) => spot.price === 0);
+      }
+
+      if (activeTag === "유료") {
+        result = result.filter((spot) => spot.price > 0);
+      }
+
+      if (activeTag === "진행중") {
+        result = result.filter((spot) => {
+          const start = dayjs(spot.startDate);
+          const end = dayjs(spot.endDate);
+
+          return (
+            today.isSame(start, "day") ||
+            today.isSame(end, "day") ||
+            (today.isAfter(start, "day") && today.isBefore(end, "day"))
+          );
+        });
+      }
+
+      if (activeTag === "오픈예정") {
+        result = result.filter((spot) =>
+          today.isBefore(dayjs(spot.startDate), "day")
+        );
+      }
+
+      return result.slice(0, 9);
+    }, [allSpots, activeTag]);
+
   return (
     <div>
-      <PopularSpotSwiper spots={spots} />
+      <PopularSpotSwiper spots={allSpots} />
 
       <section className="hero-section">
         <div className="hero-text">
@@ -154,18 +232,13 @@ const MainPage = () => {
         )}
       </section>
 
-      <section className="category-section">
-        {TAGS.map((tag) => (
-          <button key={tag} className={`category-chip ${activeTag === tag ? "active" : ""}`} onClick={() => handleTag(tag)}>{tag}</button>
-        ))}
-      </section>
-
-      <section className="spot-section">
-        <div className="section-title">
-          <h2>
-            {!loading && <><span style={{ color: "#6a5cff" }}>{total}</span>개의 스팟 발견</>}
-          </h2>
-          <button
+      <div className="section-title">
+        <section className="category-section">
+          {TAGS.map((tag) => (
+            <button key={tag} className={`category-chip ${activeTag === tag ? "active" : ""}`} onClick={() => handleTag(tag)}>{tag}</button>
+          ))}
+        </section>
+        <button
             className="view-all-btn"
             onClick={() => {
               resetFilters();
@@ -174,7 +247,10 @@ const MainPage = () => {
           >
             전체보기 <FaArrowRight />
           </button>
-        </div>
+      </div>
+      
+
+      <section className="spot-section">
 
         {loading ? (
           <div className="spot-grid">
@@ -189,17 +265,18 @@ const MainPage = () => {
               </div>
             ))}
           </div>
-        ) : spots.length === 0 ? (
+        ) : filteredSpots.length === 0 ? (
           <div style={{ textAlign: "center", padding: "80px 0", color: "#6b7280" }}>
             <p style={{ fontSize: 48, marginBottom: 16 }}>🔍</p>
             <p style={{ fontWeight: 700 }}>검색 결과가 없습니다.</p>
           </div>
         ) : (
           <div className="spot-grid">
-            {spots.map((spot) => <SpotCard key={spot.spotId} spot={spot} />)}
+            {filteredSpots.map((spot) => (
+              <SpotCard key={spot.spotId} spot={spot} />
+            ))}
           </div>
         )}
-        <Pagination currentPage={page} totalPages={totalPages} onPageChange={fetchSpots} />
       </section>
     </div>
   );

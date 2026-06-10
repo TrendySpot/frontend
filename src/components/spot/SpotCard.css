@@ -73,7 +73,7 @@
   font-size: 15px;
   font-weight: 700;
   color: #1e1e2f;
-  margin: 6px 0;
+  margin: 6px 0 9px;
   overflow: hidden;
   display: -webkit-box;
   -webkit-line-clamp: 2;
@@ -81,7 +81,7 @@
 }
 
 .spot-info p {
-  margin: 0;
+  margin: 6px 0;
   font-size: 12px;
   color: #6b7280;
 }
