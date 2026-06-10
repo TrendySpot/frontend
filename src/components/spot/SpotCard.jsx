@@ -22,7 +22,13 @@ const SpotCard = ({ spot }) => {
 
   const handleWish = (e) => {
     e.preventDefault();
-    if (!isLoggedIn) { navigate("/login"); return; }
+
+    if (!isLoggedIn) {
+      const goLogin = window.confirm("로그인이 필요한 기능입니다.");
+      if (goLogin) navigate("/login");
+      return;
+    }
+
     toggle(spot.spotId);
   };
 
