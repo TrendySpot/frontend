@@ -76,7 +76,6 @@
   margin: 6px 0 9px;
   overflow: hidden;
   display: -webkit-box;
-  -webkit-line-clamp: 2;
   -webkit-box-orient: vertical;
 }
 

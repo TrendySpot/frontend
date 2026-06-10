@@ -14,24 +14,15 @@ const AREAS = ["전체", "서울", "경기", "인천", "부산", "대구", "광�
 
 const MainPage = () => {
   const navigate = useNavigate();
-  const {
-    spotType,
-    free,
-    ongoing,
-    date,
-    resetFilters,
-    toQueryParams,
-    setMainTagFilter,
-  } = useFilter();
-  const [spots, setSpots]           = useState([]);
+  const { resetFilters } = useFilter();
   const [loading, setLoading]       = useState(false);
   const [searchArea, setSearchArea] = useState("");
   const [activeTag, setActiveTag]   = useState("전체");
   const [searchDate, setSearchDate] = useState("");
-  const [filterReady, setFilterReady] = useState(false);
   const [allSpots, setAllSpots] = useState([]);
 
   const fetchAllSpots = useCallback(async () => {
+    setLoading(true);
     try {
       const { data } = await AxiosApi.getSpots({
         page: 0,
@@ -42,6 +33,8 @@ const MainPage = () => {
       setAllSpots(data.data.content);
     } catch (e) {
       console.error(e);
+    } finally {
+      setLoading(false);
     }
   }, []);
 
@@ -49,50 +42,8 @@ const MainPage = () => {
     resetFilters();
     setActiveTag("전체");
     fetchAllSpots();
-    setFilterReady(true);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [fetchAllSpots]);
-
-  const fetchSpots = useCallback(async (p = 0) => {
-    setLoading(true);
-    try {
-      const { data } = await AxiosApi.getSpots({ ...toQueryParams(), page: p, size: 9 });
-      const pd = data.data;
-
-      let content = activeTag === "전체" ? pd.content : allSpots;
-
-      if (activeTag === "오픈예정") {
-        content = content.filter((spot) =>
-          dayjs().isBefore(dayjs(spot.startDate), "day")
-        );
-      }
-
-      setSpots(content.slice(0, 9));
-
-      if (activeTag === "진행중") {
-        content = content.filter((spot) => {
-          const today = dayjs();
-
-          return (
-            today.isSame(dayjs(spot.startDate), "day") ||
-            today.isSame(dayjs(spot.endDate), "day") ||
-            (today.isAfter(dayjs(spot.startDate), "day") &&
-              today.isBefore(dayjs(spot.endDate), "day"))
-          );
-        });
-      }
-
-      setSpots(content);
-    } catch (e) {
-      console.error(e);
-    } finally { setLoading(false); }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [spotType, free, ongoing, date, activeTag, allSpots]);
-
-  useEffect(() => {
-    if (!filterReady) return;
-    fetchSpots(0);
-  }, [filterReady, fetchSpots]);
 
   const handleTag = (tag) => {
     setActiveTag(tag);
