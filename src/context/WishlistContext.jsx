@@ -1,4 +1,10 @@
-import { createContext, useContext, useState, useCallback, useEffect } from "react";
+import {
+  createContext,
+  useContext,
+  useState,
+  useCallback,
+  useEffect,
+} from "react";
 import AxiosApi from "../api/AxiosApi";
 import { useAuth } from "./AuthContext";
 
@@ -7,8 +13,8 @@ const WishlistContext = createContext(null);
 export const WishlistProvider = ({ children }) => {
   const { isLoggedIn } = useAuth();
   const [wishedIds, setWishedIds] = useState(new Set());
-  const [wishlist, setWishlist]   = useState([]);
-  const [loading, setLoading]     = useState(false);
+  const [wishlist, setWishlist] = useState([]);
+  const [loading, setLoading] = useState(false);
 
   const fetchWishlist = useCallback(async () => {
     setLoading(true);
@@ -36,7 +42,7 @@ export const WishlistProvider = ({ children }) => {
 
   const toggle = async (spotId) => {
     const isWished = wishedIds.has(spotId);
-    const prevIds  = new Set(wishedIds);
+    const prevIds = new Set(wishedIds);
     const prevList = [...wishlist];
 
     setWishedIds((prev) => {

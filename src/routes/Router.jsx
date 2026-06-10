@@ -9,6 +9,9 @@ import MyPage from "../pages/MyPage";
 import LoginPage from "../pages/auth/LoginPage";
 import SignUpPage from "../pages/auth/SignUpPage";
 import AdminDashboardPage from "../pages/admin/AdminDashboardPage";
+import AdminMemberPage from "../pages/admin/AdminMemberPage";
+import AdminSpotPage from "../pages/admin/AdminSpotPage";
+import AdminReviewPage from "../pages/admin/AdminReviewPage";
 import NotFoundPage from "../pages/NotFoundPage";
 import OAuth2CallbackPage from "../pages/auth/OAuth2CallbackPage";
 
@@ -38,6 +41,30 @@ const Router = () => {
         element={
           <ProtectedRoute adminOnly>
             <AdminDashboardPage />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/admin/members"
+        element={
+          <ProtectedRoute adminOnly>
+            <AdminMemberPage />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/admin/spots"
+        element={
+          <ProtectedRoute adminOnly>
+            <AdminSpotPage />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/admin/reviews"
+        element={
+          <ProtectedRoute adminOnly>
+            <AdminReviewPage />
           </ProtectedRoute>
         }
       />

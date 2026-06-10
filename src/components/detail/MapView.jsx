@@ -40,13 +40,25 @@ const MapView = ({ latitude, longitude, address }) => {
   if (!latitude || !longitude) return null;
 
   return (
-    <div style={{ borderRadius: 20, overflow: "hidden", border: "1px solid #e5e7eb" }}>
+    <div
+      style={{
+        borderRadius: 20,
+        overflow: "hidden",
+        border: "1px solid #e5e7eb",
+      }}
+    >
       {error ? (
-        <div style={{
-          height: 280, display: "flex", flexDirection: "column",
-          alignItems: "center", justifyContent: "center",
-          background: "linear-gradient(135deg,#eef0ff,#ffe7f3)", gap: 8,
-        }}>
+        <div
+          style={{
+            height: 280,
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+            justifyContent: "center",
+            background: "linear-gradient(135deg,#eef0ff,#ffe7f3)",
+            gap: 8,
+          }}
+        >
           <span style={{ fontSize: 32 }}>🗺️</span>
           <p style={{ fontSize: 13, color: "#6b7280", margin: 0 }}>
             카카오맵 키를 설정해주세요.
@@ -60,11 +72,17 @@ const MapView = ({ latitude, longitude, address }) => {
       )}
 
       {address && (
-        <div style={{
-          padding: "12px 16px", background: "#f7f8fc",
-          fontSize: 13, color: "#6b7280",
-          display: "flex", alignItems: "center", gap: 6,
-        }}>
+        <div
+          style={{
+            padding: "12px 16px",
+            background: "#f7f8fc",
+            fontSize: 13,
+            color: "#6b7280",
+            display: "flex",
+            alignItems: "center",
+            gap: 6,
+          }}
+        >
           📍 {address}
         </div>
       )}
