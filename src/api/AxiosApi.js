@@ -72,6 +72,8 @@ const AxiosApi = {
     AxiosInstance.patch(`/admin/members/${memberId}/role`, null, {
       params: { role },
     }),
+  getAdminSpots: (page, size) =>
+    AxiosInstance.get("/admin/spots", { params: { page, size } }),
   createAdminSpot: (body) => AxiosInstance.post("/admin/spots", body),
   updateAdminSpot: (spotId, body) =>
     AxiosInstance.put(`/admin/spots/${spotId}`, body),

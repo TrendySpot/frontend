@@ -172,13 +172,39 @@ const LoginPage = () => {
           구글 로그인
         </a>
 
-        <Link
-          to="/signup"
-          style={{ textAlign: "center", fontSize: 14, color: "#6b7280" }}
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            gap: 12,
+            marginTop: 8,
+          }}
         >
-          아직 계정이 없으신가요?{" "}
-          <span style={{ color: "#6a5cff", fontWeight: 700 }}>회원가입</span>
-        </Link>
+          <Link
+            to="/signup"
+            style={{
+              textAlign: "center",
+              fontSize: 14,
+              color: "#6b7280",
+              textDecoration: "none",
+            }}
+          >
+            회원가입
+          </Link>
+          <span style={{ fontSize: 12, color: "#e5e7eb" }}>|</span>
+          <Link
+            to="/password-reset/request"
+            style={{
+              textAlign: "center",
+              fontSize: 14,
+              color: "#6b7280",
+              textDecoration: "none",
+            }}
+          >
+            비밀번호 찾기
+          </Link>
+        </div>
       </form>
     </div>
   );
