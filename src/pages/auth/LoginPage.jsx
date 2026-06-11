@@ -182,18 +182,6 @@ const LoginPage = () => {
           }}
         >
           <Link
-            to="/password-reset/request"
-            style={{
-              textAlign: "center",
-              fontSize: 14,
-              color: "#6b7280",
-              textDecoration: "none",
-            }}
-          >
-            비밀번호 찾기
-          </Link>
-          <span style={{ fontSize: 12, color: "#e5e7eb" }}>|</span>
-          <Link
             to="/signup"
             style={{
               textAlign: "center",
@@ -203,6 +191,18 @@ const LoginPage = () => {
             }}
           >
             회원가입
+          </Link>
+          <span style={{ fontSize: 12, color: "#e5e7eb" }}>|</span>
+          <Link
+            to="/password-reset/request"
+            style={{
+              textAlign: "center",
+              fontSize: 14,
+              color: "#6b7280",
+              textDecoration: "none",
+            }}
+          >
+            비밀번호 찾기
           </Link>
         </div>
       </form>
