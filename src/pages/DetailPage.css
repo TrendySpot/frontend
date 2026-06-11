@@ -7,7 +7,9 @@
   gap: 32px;
 }
 
-.detail-image-wrap { position: relative; }
+.detail-image-wrap {
+  position: relative;
+}
 
 .detail-image {
   width: 100%;
@@ -77,4 +79,18 @@
   align-items: center;
   justify-content: center;
   overflow: hidden;
+}
+
+@media (max-width: 900px) {
+  .detail-page {
+    grid-template-columns: 1fr;
+  }
+
+  .reservation-panel {
+    position: static;
+  }
+
+  .detail-image {
+    height: 260px;
+  }
 }
