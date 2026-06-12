@@ -1,6 +1,11 @@
 import { Link } from "react-router-dom";
+// [수정, 06월 12일 13:54] 전역 상태를 구독하기 위해 AuthContext의 useAuth 훅 임포트
+import { useAuth } from "../../context/AuthContext";
 
 const Footer = () => {
+  // [수정, 06월 12일 13:54] AuthContext로부터 실시간 로그인 상태(isLoggedIn)를 직접 분해 할당
+  const { isLoggedIn } = useAuth();
+
   return (
     <footer style={{
       background: "#1e1e2f", color: "#9ca3af",
@@ -25,9 +30,15 @@ const Footer = () => {
             </div>
             <div>
               <p style={{ color: "white", fontWeight: 700, fontSize: 13, marginBottom: 12 }}>계정</p>
-              <Link to="/login"  style={{ display: "block", fontSize: 13, marginBottom: 8, color: "#9ca3af" }}>로그인</Link>
-              <Link to="/signup" style={{ display: "block", fontSize: 13, marginBottom: 8, color: "#9ca3af" }}>회원가입</Link>
-              <Link to="/mypage" style={{ display: "block", fontSize: 13, color: "#9ca3af" }}>마이페이지</Link>
+              {/* [수정, 06월 12일 13:54] AuthContext의 isLoggedIn 상태에 따라 메뉴 분기 처리 */}
+              {isLoggedIn ? (
+                <Link to="/mypage" style={{ display: "block", fontSize: 13, color: "#9ca3af" }}>마이페이지</Link>
+              ) : (
+                <>
+                  <Link to="/login"  style={{ display: "block", fontSize: 13, marginBottom: 8, color: "#9ca3af" }}>로그인</Link>
+                  <Link to="/signup" style={{ display: "block", fontSize: 13, color: "#9ca3af" }}>회원가입</Link>
+                </>
+              )}
             </div>
           </div>
         </div>
