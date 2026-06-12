@@ -1,97 +1,136 @@
+import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import AxiosApi from "../../api/AxiosApi";
+import "./AdminDashboardPage.css";
+
 const AdminDashboardPage = () => {
+  const navigate = useNavigate();
+
+  const [dashboard, setDashboard] = useState({
+    totalMembers: 0,
+    totalSpots: 0,
+    totalTickets: 0,
+    totalReviews: 0,
+    totalRevenue: 0,
+  });
+
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchDashboard = async () => {
+      try {
+        const { data } = await AxiosApi.getDashboard();
+        setDashboard(data.data ?? data);
+      } catch (e) {
+        console.error("관리자 대시보드 조회 실패", e);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchDashboard();
+  }, []);
+
+  const stats = [
+    {
+      label: "전체 회원 수",
+      value: `${dashboard.totalMembers}명`,
+      icon: "👥",
+    },
+    {
+      label: "전체 스팟 수",
+      value: `${dashboard.totalSpots}개`,
+      icon: "📍",
+    },
+    {
+      label: "전체 예약 수",
+      value: `${dashboard.totalTickets}건`,
+      icon: "🎟️",
+    },
+    {
+      label: "전체 댓글 수",
+      value: `${dashboard.totalReviews}개`,
+      icon: "💬",
+    },
+    {
+      label: "총 매출",
+      value: `₩${dashboard.totalRevenue.toLocaleString()}`,
+      icon: "💰",
+    },
+  ];
+
+  const menus = [
+    {
+      title: "회원 관리",
+      description: "회원 목록 조회, 권한 변경, 회원 삭제",
+      path: "/admin/members",
+      icon: "👤",
+    },
+    {
+      title: "스팟 관리",
+      description: "팝업스토어/전시회 등록, 수정, 삭제",
+      path: "/admin/spots",
+      icon: "🏬",
+    },
+    {
+      title: "댓글 관리",
+      description: "전체 댓글 조회 및 부적절한 댓글 삭제",
+      path: "/admin/reviews",
+      icon: "📝",
+    },
+  ];
+
   return (
-    <div className="admin-page">
-      <aside className="admin-sidebar">
-        <h2>Trendy Spot</h2>
+    <main className="admin-dashboard">
+      <section className="admin-dashboard-header">
+        <div>
+          <p>Trendy Spot Admin</p>
+          <h1>관리자 대시보드</h1>
+        </div>
+      </section>
 
-        <nav>
-          <button>대시보드</button>
-          <button>회원 관리</button>
-          <button>행사 관리</button>
-          <button>예약 관리</button>
-          <button>결제 관리</button>
-          <button>댓글 관리</button>
-          <button>통계</button>
-        </nav>
-      </aside>
+      {loading ? (
+        <div className="admin-loading">대시보드 데이터를 불러오는 중...</div>
+      ) : (
+        <>
+          <section className="admin-stats">
+            {stats.map((stat) => (
+              <article className="admin-stat-card" key={stat.label}>
+                <div className="admin-stat-icon">{stat.icon}</div>
+                <span>{stat.label}</span>
+                <strong>{stat.value}</strong>
+              </article>
+            ))}
+          </section>
 
-      <main className="admin-content">
-        <h1>관리자 대시보드</h1>
+          <section className="admin-manage-section">
+            <div className="admin-section-title">
+              <h2>관리 메뉴</h2>
+              <p>
+                관리자 권한으로 회원, 스팟, 댓글 데이터를 관리할 수 있습니다.
+              </p>
+            </div>
 
-        <section className="admin-stats">
-          <div className="stat-card">
-            <p>전체 회원 수</p>
-            <strong>1,248명</strong>
-          </div>
-
-          <div className="stat-card">
-            <p>전체 행사 수</p>
-            <strong>326개</strong>
-          </div>
-
-          <div className="stat-card">
-            <p>전체 예약 수</p>
-            <strong>4,821건</strong>
-          </div>
-
-          <div className="stat-card">
-            <p>총 매출</p>
-            <strong>₩18,420,000</strong>
-          </div>
-        </section>
-
-        <section className="admin-grid">
-          <div className="admin-box">
-            <h2>예약 통계</h2>
-            <div className="chart-placeholder">차트 영역</div>
-          </div>
-
-          <div className="admin-box">
-            <h2>인기 행사 TOP 5</h2>
-            <ol>
-              <li>성수 감성 팝업스토어</li>
-              <li>빛의 전시회</li>
-              <li>여름 한정 브랜드 팝업</li>
-              <li>몰입형 미디어 전시</li>
-              <li>부산 아트 페어</li>
-            </ol>
-          </div>
-        </section>
-
-        <section className="admin-box">
-          <h2>최근 예약 내역</h2>
-
-          <table>
-            <thead>
-              <tr>
-                <th>예약번호</th>
-                <th>회원명</th>
-                <th>행사명</th>
-                <th>결제금액</th>
-                <th>상태</th>
-              </tr>
-            </thead>
-
-            <tbody>
-              <tr>
-                <td>R-1001</td>
-                <td>김트렌디</td>
-                <td>성수 감성 팝업스토어</td>
-                <td>₩12,000</td>
-                <td>예약완료</td>
-              </tr>
-              <tr>
-                <td>R-1002</td>
-                <td>박스팟</td>
-                <td>빛의 전시회</td>
-                <td>₩24,000</td>
-                <td>예약완료</td>
-              </tr>
-            </tbody>
-          </table>
-        </section>
-      </main>
-    </div>
+            <div className="admin-menu-grid">
+              {menus.map((menu) => (
+                <button
+                  key={menu.title}
+                  type="button"
+                  className="admin-menu-card"
+                  onClick={() => navigate(menu.path)}
+                >
+                  <div className="admin-menu-icon">{menu.icon}</div>
+                  <div>
+                    <h3>{menu.title}</h3>
+                    <p>{menu.description}</p>
+                  </div>
+                </button>
+              ))}
+            </div>
+          </section>
+        </>
+      )}
+    </main>
   );
 };
 
