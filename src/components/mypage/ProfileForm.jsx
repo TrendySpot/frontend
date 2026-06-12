@@ -158,45 +158,47 @@ const ProfileForm = () => {
           닉네임 수정
         </button>
       </section>
+      
+      {member?.provider === "LOCAL" && (
+        <section>
+          <h3 style={{ marginBottom: 14 }}>비밀번호 변경</h3>
 
-      <section>
-        <h3 style={{ marginBottom: 14 }}>비밀번호 변경</h3>
+          <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
+            <input
+              className="input-field"
+              type="password"
+              placeholder="현재 비밀번호"
+              value={currentPassword}
+              onChange={(e) => setCurrentPassword(e.target.value)}
+            />
 
-        <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
-          <input
-            className="input-field"
-            type="password"
-            placeholder="현재 비밀번호"
-            value={currentPassword}
-            onChange={(e) => setCurrentPassword(e.target.value)}
-          />
+            <input
+              className="input-field"
+              type="password"
+              placeholder="새 비밀번호 8자 이상"
+              value={newPassword}
+              onChange={(e) => setNewPassword(e.target.value)}
+            />
 
-          <input
-            className="input-field"
-            type="password"
-            placeholder="새 비밀번호 8자 이상"
-            value={newPassword}
-            onChange={(e) => setNewPassword(e.target.value)}
-          />
+            <input
+              className="input-field"
+              type="password"
+              placeholder="새 비밀번호 확인"
+              value={passwordConfirm}
+              onChange={(e) => setPasswordConfirm(e.target.value)}
+            />
 
-          <input
-            className="input-field"
-            type="password"
-            placeholder="새 비밀번호 확인"
-            value={passwordConfirm}
-            onChange={(e) => setPasswordConfirm(e.target.value)}
-          />
-
-          <button
-            type="button"
-            className="btn-primary"
-            onClick={handleUpdatePassword}
-            disabled={loading}
-          >
-            비밀번호 변경
-          </button>
-        </div>
-      </section>
+            <button
+              type="button"
+              className="btn-primary"
+              onClick={handleUpdatePassword}
+              disabled={loading}
+            >
+              비밀번호 변경
+            </button>
+          </div>
+        </section>
+      )}
     </div>
   );
 };
