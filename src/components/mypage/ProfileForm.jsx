@@ -2,286 +2,213 @@ import { useState } from "react";
 import { useAuth } from "../../context/AuthContext";
 import AxiosApi from "../../api/AxiosApi";
 
-const EyeIcon = ({ visible }) => (
-  <svg
-    width="18"
-    height="18"
-    viewBox="0 0 24 24"
-    fill="none"
-    stroke={visible ? "#6a5cff" : "#9ca3af"}
-    strokeWidth="2"
-  >
-    {visible ? (
-      <>
-        <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
-        <circle cx="12" cy="12" r="3" />
-      </>
-    ) : (
-      <>
-        <path d="M17.94 17.94A10.07 10.07 0 0112 20c-7 0-11-8-11-8a18.45 18.45 0 015.06-5.94" />
-        <path d="M9.9 4.24A9.12 9.12 0 0112 4c7 0 11 8 11 8a18.5 18.5 0 01-2.16 3.19" />
-        <line x1="1" y1="1" x2="23" y2="23" />
-      </>
-    )}
-  </svg>
-);
-
 const ProfileForm = () => {
   const { member, updateMember } = useAuth();
 
-  // 💡 [수정] form 상태에 currentPassword와 newPassword 구조 반영
-  const [form, setForm] = useState({
-    nickname: member?.nickname ?? "",
-    currentPassword: "", // 현재 비밀번호 추가
-    newPassword: "", // password -> newPassword로 변경
-    passwordConfirm: "",
-  });
+  const [nickname, setNickname] = useState(member?.nickname ?? "");
+  const [currentPassword, setCurrentPassword] = useState("");
+  const [newPassword, setNewPassword] = useState("");
+  const [passwordConfirm, setPasswordConfirm] = useState("");
 
-  const [errors, setErrors] = useState({});
+  const [nicknameChecked, setNicknameChecked] = useState(false);
+  const [nicknameAvailable, setNicknameAvailable] = useState(false);
+  const [nicknameMessage, setNicknameMessage] = useState("");
   const [loading, setLoading] = useState(false);
-  const [success, setSuccess] = useState(false);
 
-  // 💡 눈 아이콘 토글 상태들
-  const [showCurrentPw, setShowCurrentPw] = useState(false);
-  const [showNewPw, setShowNewPw] = useState(false);
-  const [showPwConfirm, setShowPwConfirm] = useState(false);
-
-  const handleChange = (e) => {
-    setForm((p) => ({ ...p, [e.target.name]: e.target.value }));
-    setErrors((p) => ({ ...p, [e.target.name]: undefined }));
-    setSuccess(false);
+  const handleNicknameChange = (e) => {
+    setNickname(e.target.value);
+    setNicknameChecked(false);
+    setNicknameAvailable(false);
+    setNicknameMessage("");
   };
 
-  const validate = () => {
-    const e = {};
-    if (!form.nickname || form.nickname.length < 2)
-      e.nickname = "닉네임은 2자 이상 20자 이하로 입력해주세요.";
+  const handleCheckNickname = async () => {
+    if (!nickname || nickname.length < 2 || nickname.length > 20) {
+      setNicknameMessage("닉네임은 2자 이상 20자 이하로 입력해주세요.");
+      setNicknameAvailable(false);
+      return;
+    }
 
-    // 💡 [추가] 이제 수정을 하려면 현재 비밀번호는 무조건 입력해야 합니다.
-    if (!form.currentPassword)
-      e.currentPassword = "본인 확인을 위해 현재 비밀번호를 입력해주세요.";
+    if (nickname === member?.nickname) {
+      setNicknameChecked(true);
+      setNicknameAvailable(true);
+      setNicknameMessage("현재 사용 중인 닉네임입니다.");
+      return;
+    }
 
-    // 💡 [수정] form.password -> form.newPassword 검증으로 변경
-    if (form.newPassword && form.newPassword.length < 8)
-      e.newPassword = "새 비밀번호는 8자 이상이어야 합니다.";
-    if (form.newPassword && form.newPassword !== form.passwordConfirm)
-      e.passwordConfirm = "새 비밀번호가 일치하지 않습니다.";
-
-    setErrors(e);
-    return Object.keys(e).length === 0;
+    try {
+      const { data } = await AxiosApi.checkNickname(nickname);
+      setNicknameChecked(true);
+      setNicknameAvailable(data.data);
+      setNicknameMessage(
+        data.data
+          ? "사용 가능한 닉네임입니다."
+          : "이미 사용 중인 닉네임입니다.",
+      );
+    } catch {
+      setNicknameMessage("닉네임 중복 확인에 실패했습니다.");
+    }
   };
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    if (!validate()) return;
+  const handleUpdateNickname = async () => {
+    if (!nicknameChecked || !nicknameAvailable) {
+      alert("닉네임 중복 확인을 해주세요.");
+      return;
+    }
+
     setLoading(true);
     try {
-      // 💡 [수정] 백엔드 UpdateProfileRequest 스펙과 Key 매칭 맞추기
-      const body = {
-        nickname: form.nickname,
-        currentPassword: form.currentPassword, // 필수 전송
-      };
+      await AxiosApi.updateNickname(nickname);
+      updateMember({ nickname });
+      alert("닉네임이 변경되었습니다.");
+    } catch (e) {
+      alert(e.response?.data?.message || "닉네임 변경에 실패했습니다.");
+    } finally {
+      setLoading(false);
+    }
+  };
 
-      // 새 비밀번호를 입력했을 때만 데이터에 추가해서 보냄
-      if (form.newPassword) body.newPassword = form.newPassword;
+  const handleUpdatePassword = async () => {
+    if (!currentPassword) {
+      alert("현재 비밀번호를 입력해주세요.");
+      return;
+    }
 
-      await AxiosApi.updateProfile(body);
+    if (!newPassword || newPassword.length < 8) {
+      alert("새 비밀번호는 8자 이상 입력해주세요.");
+      return;
+    }
 
-      updateMember({ nickname: form.nickname });
+    if (newPassword !== passwordConfirm) {
+      alert("새 비밀번호가 일치하지 않습니다.");
+      return;
+    }
 
-      // 💡 저장 후 비밀번호 필드들만 깔끔하게 초기화
-      setForm((p) => ({
-        ...p,
-        currentPassword: "",
-        newPassword: "",
-        passwordConfirm: "",
-      }));
-      setSuccess(true);
-    } catch (err) {
-      // 백엔드에서 뱉은 "현재 비밀번호가 일치하지 않습니다." 에러가 얼럿으로 뜸
-      alert(err.response?.data?.message ?? "수정에 실패했습니다.");
+    setLoading(true);
+    try {
+      await AxiosApi.updateProfile({
+        currentPassword,
+        newPassword,
+      });
+
+      alert("비밀번호가 변경되었습니다.");
+      setCurrentPassword("");
+      setNewPassword("");
+      setPasswordConfirm("");
+    } catch (e) {
+      alert(e.response?.data?.message || "비밀번호 변경에 실패했습니다.");
     } finally {
       setLoading(false);
     }
   };
 
   return (
-    <form
-      onSubmit={handleSubmit}
+    <div
       style={{
-        maxWidth: 420,
+        maxWidth: 460,
         display: "flex",
         flexDirection: "column",
-        gap: 16,
+        gap: 28,
       }}
     >
-      {/* 이메일 (수정 불가) */}
       <div>
         <label className="input-label">이메일</label>
         <input className="input-field" value={member?.email ?? ""} disabled />
       </div>
 
-      {/* 닉네임 */}
-      <div>
-        <label className="input-label">닉네임</label>
-        <input
-          className="input-field"
-          name="nickname"
-          value={form.nickname}
-          onChange={handleChange}
-          maxLength={20}
-          placeholder="2자 이상 20자 이하"
-        />
-        {errors.nickname && <p className="input-error">{errors.nickname}</p>}
-      </div>
+      <section>
+        <h3 style={{ marginBottom: 14 }}>닉네임 변경</h3>
 
-      {/* 💡 [추가] 현재 비밀번호 입력 칸 (필수 항목) */}
-      <div>
-        <label className="input-label">
-          현재 비밀번호{" "}
-          <span style={{ color: "#ef4444", fontWeight: 700 }}>*</span>
-        </label>
-        <div
-          style={{
-            position: "relative",
-            display: "flex",
-            alignItems: "center",
-          }}
-        >
+        <div style={{ display: "flex", gap: 8 }}>
           <input
             className="input-field"
-            name="currentPassword"
-            type={showCurrentPw ? "text" : "password"}
-            value={form.currentPassword}
-            onChange={handleChange}
-            placeholder="현재 비밀번호를 입력하세요"
-            style={{ paddingRight: 44 }}
+            value={nickname}
+            onChange={handleNicknameChange}
+            maxLength={20}
+            placeholder="2자 이상 20자 이하"
           />
+
           <button
             type="button"
-            onClick={() => setShowCurrentPw((p) => !p)}
+            className="btn-secondary"
+            onClick={handleCheckNickname}
             style={{
-              position: "absolute",
-              right: 12,
-              border: 0,
-              background: "transparent",
-              cursor: "pointer",
-              display: "flex",
+              minWidth: "100px",
+              height: "52px",
+              flexShrink: 0,
+              whiteSpace: "nowrap",
             }}
           >
-            <EyeIcon visible={showCurrentPw} />
+            중복확인
           </button>
         </div>
-        {errors.currentPassword && (
-          <p className="input-error">{errors.currentPassword}</p>
-        )}
-      </div>
 
-      {/* 비밀번호 변경 (선택) */}
-      <div>
-        <label className="input-label">
-          새 비밀번호{" "}
-          <span style={{ color: "#9ca3af", fontWeight: 400 }}>
-            (변경 시에만 입력)
-          </span>
-        </label>
-        <div
-          style={{
-            position: "relative",
-            display: "flex",
-            alignItems: "center",
-          }}
+        {nicknameMessage && (
+          <p
+            style={{
+              fontSize: 12,
+              fontWeight: 600,
+              marginTop: 6,
+              color: nicknameAvailable ? "#059669" : "#ef4444",
+            }}
+          >
+            {nicknameAvailable ? "✓ " : "✗ "}
+            {nicknameMessage}
+          </p>
+        )}
+
+        <button
+          type="button"
+          className="btn-primary"
+          onClick={handleUpdateNickname}
+          disabled={loading}
+          style={{ marginTop: 12 }}
         >
-          {/* 💡 name과 value를 newPassword로 변경 */}
-          <input
-            className="input-field"
-            name="newPassword"
-            type={showNewPw ? "text" : "password"}
-            value={form.newPassword}
-            onChange={handleChange}
-            placeholder="8자 이상"
-            style={{ paddingRight: 44 }}
-          />
-          <button
-            type="button"
-            onClick={() => setShowNewPw((p) => !p)}
-            style={{
-              position: "absolute",
-              right: 12,
-              border: 0,
-              background: "transparent",
-              cursor: "pointer",
-              display: "flex",
-            }}
-          >
-            <EyeIcon visible={showNewPw} />
-          </button>
-        </div>
-        {errors.newPassword && (
-          <p className="input-error">{errors.newPassword}</p>
-        )}
-      </div>
+          닉네임 수정
+        </button>
+      </section>
 
-      {/* 비밀번호 확인 */}
-      {/* 💡 form.password -> form.newPassword 로 조건부 랜더링 변경 */}
-      {form.newPassword && (
-        <div>
-          <label className="input-label">새 비밀번호 확인</label>
-          <div
-            style={{
-              position: "relative",
-              display: "flex",
-              alignItems: "center",
-            }}
-          >
+      {member?.provider === "LOCAL" && (
+        <section>
+          <h3 style={{ marginBottom: 14 }}>비밀번호 변경</h3>
+
+          <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
             <input
               className="input-field"
-              name="passwordConfirm"
-              type={showPwConfirm ? "text" : "password"}
-              value={form.passwordConfirm}
-              onChange={handleChange}
-              placeholder="비밀번호 재입력"
-              style={{ paddingRight: 44 }}
+              type="password"
+              placeholder="현재 비밀번호"
+              value={currentPassword}
+              onChange={(e) => setCurrentPassword(e.target.value)}
             />
+
+            <input
+              className="input-field"
+              type="password"
+              placeholder="새 비밀번호 8자 이상"
+              value={newPassword}
+              onChange={(e) => setNewPassword(e.target.value)}
+            />
+
+            <input
+              className="input-field"
+              type="password"
+              placeholder="새 비밀번호 확인"
+              value={passwordConfirm}
+              onChange={(e) => setPasswordConfirm(e.target.value)}
+            />
+
             <button
               type="button"
-              onClick={() => setShowPwConfirm((p) => !p)}
-              style={{
-                position: "absolute",
-                right: 12,
-                border: 0,
-                background: "transparent",
-                cursor: "pointer",
-                display: "flex",
-              }}
+              className="btn-primary"
+              onClick={handleUpdatePassword}
+              disabled={loading}
             >
-              <EyeIcon visible={showPwConfirm} />
+              비밀번호 변경
             </button>
           </div>
-          {errors.passwordConfirm && (
-            <p className="input-error">{errors.passwordConfirm}</p>
-          )}
-        </div>
+        </section>
       )}
-
-      <div
-        style={{ display: "flex", alignItems: "center", gap: 12, marginTop: 4 }}
-      >
-        <button
-          className="btn-primary"
-          type="submit"
-          disabled={loading}
-          style={{ padding: "12px 28px", fontSize: 14 }}
-        >
-          {loading ? "저장 중..." : "수정 저장"}
-        </button>
-        {success && (
-          <span style={{ fontSize: 13, color: "#059669", fontWeight: 600 }}>
-            ✓ 저장되었습니다.
-          </span>
-        )}
-      </div>
-    </form>
+    </div>
   );
 };
 
