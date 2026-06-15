@@ -32,6 +32,12 @@ const AxiosApi = {
   resetPassword: (data) => publicApi.post("/auth/password/reset", data),
   refresh: (refreshToken) =>
     publicApi.post("/auth/refresh", null, { params: { refreshToken } }),
+  checkNickname: (nickname) =>
+    publicApi.get(`/auth/check-nickname?nickname=${nickname}`),
+  updateNickname: (nickname) =>
+    AxiosInstance.patch(
+      `/auth/nickname?nickname=${encodeURIComponent(nickname)}`,
+    ),
 
   // ── 스팟 (Spot) ──────────────────────────────────────────
   getSpots: (params) => AxiosInstance.get("/spots", { params }),

@@ -9,15 +9,7 @@ import "swiper/css/effect-coverflow";
 import "./PopularSpotSwiper.css";
 
 const calcReservationRate = (spot) => {
-  const schedule = spot.schedules?.[0];
-
-  if (!schedule || !schedule.totalTickets) return 0;
-
-  return Math.round(
-    ((schedule.totalTickets - schedule.remainedTickets) /
-      schedule.totalTickets) *
-      100
-  );
+  return spot.reservationRate ?? 0;
 };
 
 const PopularSpotSwiper = ({ spots = [] }) => {

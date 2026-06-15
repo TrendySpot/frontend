@@ -4,7 +4,7 @@ const AuthContext = createContext(null);
 
 export const AuthProvider = ({ children }) => {
   const [accessToken, setAccessToken] = useState(
-    localStorage.getItem("accessToken") || null
+    localStorage.getItem("accessToken") || null,
   );
   const [member, setMember] = useState(() => {
     try {
@@ -16,8 +16,16 @@ export const AuthProvider = ({ children }) => {
   });
 
   // 로그인 - LoginResponse: { accessToken, refreshToken, memberId, email, nickname, role }
-  const login = ({ accessToken, refreshToken, memberId, email, nickname, role }) => {
-    const memberData = { memberId, email, nickname, role };
+  const login = ({
+    accessToken,
+    refreshToken,
+    memberId,
+    email,
+    nickname,
+    role,
+    provider,
+  }) => {
+    const memberData = { memberId, email, nickname, role, provider };
     localStorage.setItem("accessToken", accessToken);
     localStorage.setItem("refreshToken", refreshToken || "");
     localStorage.setItem("member", JSON.stringify(memberData));
@@ -40,11 +48,19 @@ export const AuthProvider = ({ children }) => {
   };
 
   const isLoggedIn = !!accessToken;
-  const isAdmin    = member?.role === "ROLE_ADMIN";
+  const isAdmin = member?.role === "ROLE_ADMIN";
 
   return (
     <AuthContext.Provider
-      value={{ accessToken, member, isLoggedIn, isAdmin, login, logout, updateMember }}
+      value={{
+        accessToken,
+        member,
+        isLoggedIn,
+        isAdmin,
+        login,
+        logout,
+        updateMember,
+      }}
     >
       {children}
     </AuthContext.Provider>

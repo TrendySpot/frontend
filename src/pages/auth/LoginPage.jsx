@@ -54,9 +54,25 @@ const LoginPage = () => {
     setLoading(true);
     try {
       const { data } = await AxiosApi.login(form.email, form.password);
-      const { accessToken, refreshToken, nickname, role, memberId, email } =
-        data.data;
-      login({ accessToken, refreshToken, nickname, role, memberId, email });
+      const {
+        accessToken,
+        refreshToken,
+        memberId,
+        email,
+        nickname,
+        role,
+        provider,
+      } = data.data;
+
+      login({
+        accessToken,
+        refreshToken,
+        memberId,
+        email,
+        nickname,
+        role,
+        provider,
+      });
       await fetchWishlist();
       navigate(from, { replace: true });
     } catch (err) {
