@@ -20,11 +20,33 @@ const ReservationModal = ({ isOpen, onClose, spot, onConfirm }) => {
   };
 
   return (
-    <div className="modal-overlay" onClick={onClose}>
+    // [수정, 06월 12일 14:02] 바탕 영역을 클릭하더라도 모달이 닫히지 않도록 기존 onClick={onClose} 핸들러 제거
+    <div className="modal-overlay">
       <div className="modal-box" style={{ maxWidth: 520 }} onClick={(e) => e.stopPropagation()}>
         <div className="modal-header">
           <h2>예약하기</h2>
-          <button onClick={onClose} style={{ border: 0, background: "transparent", cursor: "pointer", fontSize: 20, color: "#6b7280" }}>✕</button>
+          {/* [수정, 06월 12일 14:02] X 버튼 마우스 호버 시 가시성 확보를 위한 크기 확대(scale) 및 색상 변환 인터랙션 추가 */}
+          <button 
+            onClick={onClose} 
+            style={{ 
+              border: 0, 
+              background: "transparent", 
+              cursor: "pointer", 
+              fontSize: 20, 
+              color: "#6b7280",
+              transition: "color 0.2s, transform 0.2s",
+            }}
+            onMouseEnter={(e) => {
+              e.currentTarget.style.color = "#1e1e2f";
+              e.currentTarget.style.transform = "scale(1.1)";
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.color = "#6b7280";
+              e.currentTarget.style.transform = "scale(1)";
+            }}
+          >
+            ✕
+          </button>
         </div>
         <div className="modal-body">
           {/* 가격 */}
