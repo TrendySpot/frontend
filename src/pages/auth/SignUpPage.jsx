@@ -72,7 +72,11 @@ const SignUpPage = () => {
     password: "",
     passwordConfirm: "",
     nickname: "",
-    termsAgreed: false,
+  });
+  const [terms, setTerms] = useState({
+    terms1: false,
+    terms2: false,
+    terms3: false,
   });
   const [errors, setErrors] = useState({});
   const [codeSent, setCodeSent] = useState(false);
@@ -100,7 +104,8 @@ const SignUpPage = () => {
       e.nickname = "닉네임은 2자 이상 20자 이하로 입력해주세요.";
     if (form.nickname.length > 20)
       e.nickname = "닉네임은 2자 이상 20자 이하로 입력해주세요.";
-    if (!form.termsAgreed) e.terms = "이용약관에 동의해주세요.";
+    if (!terms.terms1 || !terms.terms2)
+      e.terms = "필수 이용약관에 동의해주세요.";
     if (!nicknameChecked || !nicknameAvailable) {
       e.nickname = "닉네임 중복 확인을 해주세요.";
     }
@@ -110,14 +115,29 @@ const SignUpPage = () => {
   };
 
   const handleChange = (e) => {
-    const { name, value, type, checked } = e.target;
-    setForm((p) => ({ ...p, [name]: type === "checkbox" ? checked : value }));
+    const { name, value } = e.target;
+    setForm((p) => ({ ...p, [name]: value }));
     setErrors((p) => ({ ...p, [name]: undefined }));
     if (name === "nickname") {
       setNicknameChecked(false);
       setNicknameAvailable(false);
       setNicknameMessage("");
     }
+  };
+
+  const allChecked = terms.terms1 && terms.terms2 && terms.terms3;
+  const handleAllTerms = () => {
+    const next = !allChecked;
+    setTerms({ terms1: next, terms2: next, terms3: next });
+    if (next) setErrors((p) => ({ ...p, terms: undefined }));
+  };
+  const handleTerm = (key) => {
+    setTerms((p) => {
+      const next = { ...p, [key]: !p[key] };
+      if (next.terms1 && next.terms2)
+        setErrors((e) => ({ ...e, terms: undefined }));
+      return next;
+    });
   };
 
   const handleSendCode = async () => {
@@ -161,7 +181,6 @@ const SignUpPage = () => {
         email: form.email,
         password: form.password,
         nickname: form.nickname,
-        termsAgreed: form.termsAgreed,
       });
       alert("회원가입이 완료되었습니다!");
       navigate("/login");
@@ -445,7 +464,18 @@ const SignUpPage = () => {
           )}
         </div>
 
-        <div>
+        {/* 이용약관 */}
+        <div
+          style={{
+            border: "1px solid #e5e7eb",
+            borderRadius: 14,
+            padding: "14px 16px",
+            display: "flex",
+            flexDirection: "column",
+            gap: 10,
+          }}
+        >
+          {/* 모두 동의 */}
           <label
             style={{
               display: "flex",
@@ -453,20 +483,92 @@ const SignUpPage = () => {
               gap: 8,
               cursor: "pointer",
               fontSize: 14,
+              fontWeight: 700,
+              color: "#1e1e2f",
+              paddingBottom: 10,
+              borderBottom: "1px solid #f1f2f6",
             }}
           >
             <input
               type="checkbox"
-              name="termsAgreed"
-              checked={form.termsAgreed}
-              onChange={handleChange}
+              checked={allChecked}
+              onChange={handleAllTerms}
               style={{ width: 16, height: 16, accentColor: "#6a5cff" }}
             />
-            이용약관 및 개인정보처리방침 동의{" "}
-            <span style={{ color: "#ef4444" }}>(필수)</span>
+            모두 동의합니다
           </label>
+
+          {/* 필수 1 */}
+          <label
+            style={{
+              display: "flex",
+              alignItems: "center",
+              gap: 8,
+              cursor: "pointer",
+              fontSize: 13,
+              color: "#374151",
+            }}
+          >
+            <input
+              type="checkbox"
+              checked={terms.terms1}
+              onChange={() => handleTerm("terms1")}
+              style={{ width: 15, height: 15, accentColor: "#6a5cff" }}
+            />
+            <span style={{ flex: 1 }}>
+              서비스 이용약관 동의{" "}
+              <span style={{ color: "#ef4444", fontWeight: 600 }}>(필수)</span>
+            </span>
+          </label>
+
+          {/* 필수 2 */}
+          <label
+            style={{
+              display: "flex",
+              alignItems: "center",
+              gap: 8,
+              cursor: "pointer",
+              fontSize: 13,
+              color: "#374151",
+            }}
+          >
+            <input
+              type="checkbox"
+              checked={terms.terms2}
+              onChange={() => handleTerm("terms2")}
+              style={{ width: 15, height: 15, accentColor: "#6a5cff" }}
+            />
+            <span style={{ flex: 1 }}>
+              개인정보 수집·이용 동의{" "}
+              <span style={{ color: "#ef4444", fontWeight: 600 }}>(필수)</span>
+            </span>
+          </label>
+
+          {/* 선택 */}
+          <label
+            style={{
+              display: "flex",
+              alignItems: "center",
+              gap: 8,
+              cursor: "pointer",
+              fontSize: 13,
+              color: "#374151",
+            }}
+          >
+            <input
+              type="checkbox"
+              checked={terms.terms3}
+              onChange={() => handleTerm("terms3")}
+              style={{ width: 15, height: 15, accentColor: "#6a5cff" }}
+            />
+            <span style={{ flex: 1 }}>
+              마케팅 정보 수신 동의{" "}
+              <span style={{ color: "#6b7280" }}>(선택)</span>
+            </span>
+          </label>
+
           {errors.terms && (
-            <p className="input-error" style={{ marginLeft: 24 }}>
+            <p className="input-error" style={{ margin: 0 }}>
               {errors.terms}
             </p>
           )}
