@@ -12,6 +12,8 @@ import { FaHeart, FaRegHeart } from "react-icons/fa";
 import dayjs from "dayjs";
 import "./DetailPage.css";
 
+import { useTicketSocket } from "../hooks/useTicketSocket";
+
 const DetailPage = () => {
   const { spotId } = useParams();
   const navigate = useNavigate();
@@ -20,11 +22,37 @@ const DetailPage = () => {
 
   const [spot, setSpot] = useState(null);
   const [loading, setLoading] = useState(true);
+
+  const [liveSchedules, setLiveSchedules] = useState([]);
+  const { ticketStatus } = useTicketSocket(Number(spotId));
+
   const [showReservation, setShowReservation] = useState(false);
   const [showPayment, setShowPayment] = useState(false);
   const [reservation, setReservation] = useState(null);
 
   const isWished = spot ? wishedIds.has(spot.spotId) : false;
+
+  useEffect(() => {
+    if (!spot?.schedules) return;
+
+    setLiveSchedules(spot.schedules);
+  }, [spot]);
+
+  useEffect(() => {
+    if (!ticketStatus) return;
+
+    setLiveSchedules((prev) =>
+      prev.map((schedule) =>
+        schedule.scheduleId === ticketStatus.scheduleId
+          ? {
+              ...schedule,
+              remainedTickets: ticketStatus.remainedTickets,
+              totalTickets: ticketStatus.totalTickets,
+            }
+          : schedule,
+      ),
+    );
+  }, [ticketStatus]);
 
   useEffect(() => {
     setLoading(true);
@@ -66,14 +94,16 @@ const DetailPage = () => {
 
   if (!spot) return null;
 
-  const totalTickets = (spot.schedules ?? []).reduce(
+  const totalTickets = liveSchedules.reduce(
     (sum, s) => sum + (s.totalTickets ?? 0),
     0,
   );
-  const remainedTickets = (spot.schedules ?? []).reduce(
+
+  const remainedTickets = liveSchedules.reduce(
     (sum, s) => sum + (s.remainedTickets ?? 0),
     0,
   );
+
   const bookedTickets = totalTickets - remainedTickets;
   const progress =
     totalTickets > 0 ? Math.round((bookedTickets / totalTickets) * 100) : 0;
@@ -157,10 +187,7 @@ const DetailPage = () => {
           )}
 
           <h2>예약 현황</h2>
-          <TicketStatus
-            spotId={Number(spotId)}
-            schedules={spot.schedules ?? []}
-          />
+          <TicketStatus schedules={liveSchedules} />
 
           {spot.latitude && spot.longitude && (
             <>

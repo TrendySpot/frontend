@@ -1,14 +1,9 @@
-import { useTicketSocket } from "../../hooks/useTicketSocket";
+import React from "react";
 
 const TicketStatus = ({ spotId, schedules = [] }) => {
-  const { ticketStatus} = useTicketSocket(spotId);
+  const total = schedules.reduce((sum, s) => sum + (s.totalTickets ?? 0), 0);
 
-  // 전체 스케줄 합계 계산
-  const totalFromSchedules = schedules.reduce(
-    (sum, s) => sum + (s.totalTickets ?? 0),
-    0,
-  );
-  const remainedFromSchedules = schedules.reduce(
+  const remained = schedules.reduce(
     (sum, s) => sum + (s.remainedTickets ?? 0),
     0,
   );
