@@ -5,29 +5,54 @@ import dayjs from "dayjs";
 
 const ReviewSection = ({ spotId }) => {
   const { member, isLoggedIn } = useAuth();
-  const [reviews, setReviews]       = useState([]);
-  const [page, setPage]             = useState(0);
+  const [reviews, setReviews] = useState([]);
+  const [page, setPage] = useState(0);
   const [totalPages, setTotalPages] = useState(1);
-  const [loading, setLoading]       = useState(false);
-  const [content, setContent]       = useState("");
+  const [loading, setLoading] = useState(false);
+  const [content, setContent] = useState("");
   const [submitting, setSubmitting] = useState(false);
+  const [totalCount, setTotalCount] = useState(0);
 
-  const fetchReviews = useCallback(async (p = 0) => {
-    setLoading(true);
-    try {
-      const { data } = await AxiosApi.getReviews(spotId, { page: p, size: 10 });
-      const pd = data.data;
-      setReviews(pd.content);
-      setTotalPages(pd.totalPages);
-      setPage(p);
-    } catch (e) {
-      console.error(e);
-    } finally {
-      setLoading(false);
-    }
-  }, [spotId]);
+  const fetchReviews = useCallback(
+    async (p = 0) => {
+      setLoading(true);
 
-  useEffect(() => { fetchReviews(0); }, [fetchReviews]);
+      try {
+        const { data } = await AxiosApi.getReviews(spotId, {
+          page: p,
+          size: 10,
+        });
+
+        const pd = data.data;
+
+        setTotalCount(pd.totalElements);
+
+        if (p === 0) {
+          setReviews(pd.content);
+        } else {
+          setReviews((prev) => [...prev, ...pd.content]);
+        }
+
+        if (p === 0) {
+          setReviews(pd.content);
+        } else {
+          setReviews((prev) => [...prev, ...pd.content]);
+        }
+
+        setTotalPages(pd.totalPages);
+        setPage(p);
+      } catch (e) {
+        console.error(e);
+      } finally {
+        setLoading(false);
+      }
+    },
+    [spotId],
+  );
+
+  useEffect(() => {
+    fetchReviews(0);
+  }, [fetchReviews]);
 
   const handleSubmit = async () => {
     if (!content.trim()) return;
@@ -36,8 +61,11 @@ const ReviewSection = ({ spotId }) => {
       await AxiosApi.writeReview(spotId, content.trim());
       setContent("");
       fetchReviews(0);
-    } catch { alert("댓글 등록에 실패했습니다."); }
-    finally { setSubmitting(false); }
+    } catch {
+      alert("댓글 등록에 실패했습니다.");
+    } finally {
+      setSubmitting(false);
+    }
   };
 
   const handleDelete = async (reviewId) => {
@@ -45,13 +73,22 @@ const ReviewSection = ({ spotId }) => {
     try {
       await AxiosApi.deleteReview(spotId, reviewId);
       fetchReviews(page);
-    } catch { alert("삭제에 실패했습니다."); }
+    } catch {
+      alert("삭제에 실패했습니다.");
+    }
   };
 
   return (
     <div>
-      <h2 style={{ fontSize: 18, fontWeight: 800, color: "#1e1e2f", marginBottom: 20 }}>
-        댓글 <span style={{ color: "#6a5cff" }}>{reviews.length}</span>
+      <h2
+        style={{
+          fontSize: 18,
+          fontWeight: 800,
+          color: "#1e1e2f",
+          marginBottom: 20,
+        }}
+      >
+        댓글 <span style={{ color: "#6a5cff" }}> {totalCount}</span>
       </h2>
 
       {/* ── 댓글 작성 폼 ── */}
@@ -61,7 +98,11 @@ const ReviewSection = ({ spotId }) => {
           maxLength={1000}
           value={content}
           onChange={(e) => setContent(e.target.value)}
-          placeholder={isLoggedIn ? "댓글을 입력하세요..." : "로그인 후 댓글을 작성할 수 있습니다."}
+          placeholder={
+            isLoggedIn
+              ? "댓글을 입력하세요..."
+              : "로그인 후 댓글을 작성할 수 있습니다."
+          }
           disabled={!isLoggedIn}
           style={{
             width: "100%",
@@ -76,10 +117,16 @@ const ReviewSection = ({ spotId }) => {
             display: "block",
             transition: "border 0.2s",
           }}
-          onFocus={(e) => { e.target.style.borderColor = "#6a5cff"; }}
-          onBlur={(e)  => { e.target.style.borderColor = "#e5e7eb"; }}
+          onFocus={(e) => {
+            e.target.style.borderColor = "#6a5cff";
+          }}
+          onBlur={(e) => {
+            e.target.style.borderColor = "#e5e7eb";
+          }}
         />
-        <div style={{ display: "flex", justifyContent: "flex-end", marginTop: 10 }}>
+        <div
+          style={{ display: "flex", justifyContent: "flex-end", marginTop: 10 }}
+        >
           <button
             onClick={handleSubmit}
             disabled={!content.trim() || submitting}
@@ -121,33 +168,68 @@ const ReviewSection = ({ spotId }) => {
         {reviews.map((r) => (
           <div key={r.reviewId} style={{ display: "flex", gap: 12 }}>
             {/* 아바타 */}
-            <div style={{
-              width: 36, height: 36, borderRadius: "50%",
-              background: "linear-gradient(135deg,#ffd84d,#ff5ea8)",
-              display: "flex", alignItems: "center", justifyContent: "center",
-              fontSize: 14, fontWeight: 700, flexShrink: 0, color: "white",
-            }}>
+            <div
+              style={{
+                width: 36,
+                height: 36,
+                borderRadius: "50%",
+                background: "linear-gradient(135deg,#ffd84d,#ff5ea8)",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                fontSize: 14,
+                fontWeight: 700,
+                flexShrink: 0,
+                color: "white",
+              }}
+            >
               {r.nickname?.[0]?.toUpperCase() ?? "?"}
             </div>
 
             <div style={{ flex: 1, minWidth: 0 }}>
-              <div style={{ display: "flex", alignItems: "baseline", gap: 8, marginBottom: 4 }}>
-                <span style={{ fontSize: 14, fontWeight: 700 }}>{r.nickname}</span>
+              <div
+                style={{
+                  display: "flex",
+                  alignItems: "baseline",
+                  gap: 8,
+                  marginBottom: 4,
+                }}
+              >
+                <span style={{ fontSize: 14, fontWeight: 700 }}>
+                  {r.nickname}
+                </span>
                 <span style={{ fontSize: 12, color: "#9ca3af" }}>
                   {dayjs(r.createdAt).format("YYYY.MM.DD HH:mm")}
                 </span>
               </div>
-              <p style={{ fontSize: 14, color: "#6b7280", margin: 0, lineHeight: 1.6, wordBreak: "break-word" }}>
+              <p
+                style={{
+                  fontSize: 14,
+                  color: "#6b7280",
+                  margin: 0,
+                  lineHeight: 1.6,
+                  wordBreak: "break-word",
+                }}
+              >
                 {r.content}
               </p>
             </div>
 
             {/* 삭제 버튼 - 본인 댓글만 */}
             {member?.memberId === r.memberId && (
-              <button onClick={() => handleDelete(r.reviewId)}
-                style={{ border: 0, background: "transparent", fontSize: 12,
-                         color: "#9ca3af", cursor: "pointer", flexShrink: 0,
-                         fontFamily: "inherit", padding: "0 4px" }}>
+              <button
+                onClick={() => handleDelete(r.reviewId)}
+                style={{
+                  border: 0,
+                  background: "transparent",
+                  fontSize: 12,
+                  color: "#9ca3af",
+                  cursor: "pointer",
+                  flexShrink: 0,
+                  fontFamily: "inherit",
+                  padding: "0 4px",
+                }}
+              >
                 삭제
               </button>
             )}
@@ -157,11 +239,22 @@ const ReviewSection = ({ spotId }) => {
 
       {/* ── 더 보기 ── */}
       {page < totalPages - 1 && (
-        <button onClick={() => fetchReviews(page + 1)}
-          style={{ width: "100%", marginTop: 16, padding: "12px",
-                   border: "1px solid #e5e7eb", borderRadius: 14,
-                   background: "white", color: "#6b7280", fontSize: 14,
-                   fontWeight: 600, fontFamily: "inherit", cursor: "pointer" }}>
+        <button
+          onClick={() => fetchReviews(page + 1)}
+          style={{
+            width: "100%",
+            marginTop: 16,
+            padding: "12px",
+            border: "1px solid #e5e7eb",
+            borderRadius: 14,
+            background: "white",
+            color: "#6b7280",
+            fontSize: 14,
+            fontWeight: 600,
+            fontFamily: "inherit",
+            cursor: "pointer",
+          }}
+        >
           더 보기
         </button>
       )}
