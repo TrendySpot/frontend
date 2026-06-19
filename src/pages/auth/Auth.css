@@ -154,3 +154,27 @@
   background: #f7f8fc;
   border-color: #d1d5db;
 }
+
+.btn-naver {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;                  /* 💡 아이콘과 글자 사이에 8px 여백을 줍니다! */
+  width: 100%;
+  padding: 16px;
+  font-size: 15px;
+  font-weight: 500;
+  border-radius: 16px;
+  border: none;
+  background-color: #03C75A;
+  color: white;
+  text-decoration: none;
+  cursor: pointer;
+  box-sizing: border-box;
+  margin-top: 8px;
+  transition: background-color 0.2s ease;
+}
+
+.btn-naver:hover {
+  background-color: #17b752;
+}
