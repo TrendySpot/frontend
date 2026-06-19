@@ -154,3 +154,26 @@
   background: #f7f8fc;
   border-color: #d1d5db;
 }
+
+.btn-naver {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  padding: 16px;
+  font-size: 15px;
+  font-weight: 500;
+  border-radius: 16px;
+  border: none;
+  background-color: #03C75A; /* 네이버 공식 초록색 */
+  color: white;
+  text-decoration: none;
+  cursor: pointer;
+  box-sizing: border-box;
+  margin-top: 8px; /* 버튼 사이 간격 조절 */
+  transition: background-color 0.2s ease;
+}
+
+.btn-naver:hover {
+  background-color: #17b752; /* 마우스 올렸을 때 살짝 밝아지는 효과 */
+}
